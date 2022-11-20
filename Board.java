@@ -182,14 +182,14 @@ public class Board {
 
     /*** DICTs ***/
     private void initLettersDict() {
-        lettersDict.put(1, "a");
-        lettersDict.put(2, "b");
-        lettersDict.put(3, "c");
-        lettersDict.put(4, "d");
-        lettersDict.put(5, "e");
-        lettersDict.put(6, "f");
-        lettersDict.put(7, "g");
-        lettersDict.put(8, "h");
+        lettersDict.put(1, "h");
+        lettersDict.put(2, "g");
+        lettersDict.put(3, "f");
+        lettersDict.put(4, "e");
+        lettersDict.put(5, "d");
+        lettersDict.put(6, "c");
+        lettersDict.put(7, "b");
+        lettersDict.put(8, "a");
     }
 
     private void initPiecesValuesDict() {
@@ -210,7 +210,7 @@ public class Board {
         Piece.Type currentType = Piece.Type.None;
 
         System.out.println("\n");
-        System.out.println("\t    A\t    B\t    C\t    D\t    E\t    F\t    G\t    H\n");
+        System.out.println("\t    H\t    G\t    F\t    E\t    D\t    C\t    B\t    A\n");
         System.out.println("\t-----------------------------------------------------------------");
         for (int r = 0; r <= boardLength; r++) {
             System.out.println("\t|       |       |       |       |       |       |       |       |");
@@ -254,7 +254,7 @@ public class Board {
             else {
                 System.out.println("\n\t|       |       |       |       |       |       |       |       |");
                 System.out.println("\t-----------------------------------------------------------------");
-                System.out.println("\n\t    A\t    B\t    C\t    D\t    E\t    F\t    G\t    H");
+                System.out.println("\t    H\t    G\t    F\t    E\t    D\t    C\t    B\t    A\n");
             }
         }
         System.out.println("\n");
