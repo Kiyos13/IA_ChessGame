@@ -27,6 +27,8 @@ public class Game {
         int currentWhitePoints = 0, currentBlackPoints = 0;
         Piece.Color currentWinner, currentPlayer = Piece.Color.White, winnerOfTheGame = Piece.Color.None;
 
+        String currentMoveForArena;
+
 
         while (!board.gameIsFinished()) {
         //for (int t = 0; t < 5; t++) {
@@ -57,20 +59,17 @@ public class Game {
                 }
             }
             currentChoosenMove = chooseMove(allPossibleMovesWithStart, totalNbPossibleMoves);
+            currentMoveForArena = Board.lettersDict.get(currentChoosenMove[0][1] + 1) + Integer.toString(currentChoosenMove[0][0] + 1) + Board.lettersDict.get(currentChoosenMove[1][1] + 1) + Integer.toString(currentChoosenMove[1][0] + 1);
             currentWhitePoints = board.getWhitePoints();
             currentBlackPoints = board.getBlackPoints();
             currentWinner = board.getWinner();
 
-            displayChoosenMoveAndWinStatus(currentChoosenMove, currentWhitePoints, currentBlackPoints, currentWinner);
+            displayChoosenMoveAndWinStatus(currentMoveForArena, currentWhitePoints, currentBlackPoints, currentWinner);
 
             board.movePiece(currentChoosenMove[0], currentChoosenMove[1]);
             board.displayBoard();
-            
 
-            if (currentPlayer == Piece.Color.White)
-                currentPlayer = Piece.Color.Black;
-            else if (currentPlayer == Piece.Color.Black)
-                currentPlayer = Piece.Color.White;
+            currentPlayer = (currentPlayer == Piece.Color.White) ? Piece.Color.Black : Piece.Color.White;                
         }
 
         winnerOfTheGame = board.getWinner();
@@ -89,10 +88,8 @@ public class Game {
         System.out.printf("\n");
     }
 
-    private static void displayChoosenMoveAndWinStatus(int[][] currentChoosenMove, int currentWhitePoints, int currentBlackPoints, Piece.Color currentWinner) {
-        System.out.printf("Choosen move = %s%d to %s%d\tWhite points = %s - Black points = %s -> Current winner = %s\n", 
-                                Board.lettersDict.get(currentChoosenMove[0][1] + 1), currentChoosenMove[0][0] + 1, 
-                                Board.lettersDict.get(currentChoosenMove[1][1] + 1), currentChoosenMove[1][0] + 1,
-                                currentWhitePoints, currentBlackPoints, currentWinner);
+    private static void displayChoosenMoveAndWinStatus(String currentMoveForArena, int currentWhitePoints, int currentBlackPoints, Piece.Color currentWinner) {
+        System.out.printf("Choosen move = %s\tWhite points = %s - Black points = %s -> Current winner = %s\n", 
+                                currentMoveForArena, currentWhitePoints, currentBlackPoints, currentWinner);
     }
 }

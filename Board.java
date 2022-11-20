@@ -182,14 +182,14 @@ public class Board {
 
     /*** DICTs ***/
     private void initLettersDict() {
-        lettersDict.put(1, "A");
-        lettersDict.put(2, "B");
-        lettersDict.put(3, "C");
-        lettersDict.put(4, "D");
-        lettersDict.put(5, "E");
-        lettersDict.put(6, "F");
-        lettersDict.put(7, "G");
-        lettersDict.put(8, "H");
+        lettersDict.put(1, "a");
+        lettersDict.put(2, "b");
+        lettersDict.put(3, "c");
+        lettersDict.put(4, "d");
+        lettersDict.put(5, "e");
+        lettersDict.put(6, "f");
+        lettersDict.put(7, "g");
+        lettersDict.put(8, "h");
     }
 
     private void initPiecesValuesDict() {
