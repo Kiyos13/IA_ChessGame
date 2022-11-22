@@ -13,6 +13,12 @@ public class Game {
      
     public static void main(String[] args) throws InterruptedException {
         System.out.println("================ NOUVELLE PARTIE =================");
+
+        UCI.uciCommunication();
+        /********** ! EVERYTHING AFTER WILL NOT BE EXECUTED ! **********/
+
+
+
         Board board = new Board();
         board.initBoard();
         board.displayBoard();

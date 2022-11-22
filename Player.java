@@ -208,17 +208,17 @@ public class Player {
     }
 
     public Move movePlayer(Board board) throws InterruptedException{
-        System.out.println("PLAYER 1 MINIMAX");
+        //System.out.println("PLAYER 1 MINIMAX");
         Board copyBoard = new Board();
         copyBoard.emptyBoard();
         copyBoard.boardCopy(board);
-        System.out.println("BOARD NOT COPY");
+        //System.out.println("BOARD NOT COPY");
         board.displayBoard();
-        System.out.println("INTIIAL BOARD COPY");
+        //System.out.println("INTIIAL BOARD COPY");
         copyBoard.displayBoard();
         //MiniMaxReturn miniMaxReturnVal = this.alphaBeta(copyBoard, this.depth, true, null, -10000, 10000);
         MiniMaxReturn miniMaxReturnVal = this.miniMax(copyBoard, this.depth, true, null);
-        System.out.println("Valeur : " + miniMaxReturnVal.val);
+        //System.out.println("Valeur : " + miniMaxReturnVal.val);
         Move move = miniMaxReturnVal.move;
         return move;
     }

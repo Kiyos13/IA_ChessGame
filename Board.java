@@ -269,6 +269,33 @@ public class Board {
 
 
     /***** FUNCs *****/
+    public void movePieceArena(String move) {
+        String startPosition = move.substring(0, 2);
+        String endPosition = move.substring(2, 4);
+
+        int[] startPositionInt = {-1, -1};
+        int[] endPositionInt = {-1, -1};
+
+        for (int i = 1; i <= boardLength + 1; i++) {
+            if (startPosition.substring(0, 1).equals(lettersDict.get(i)))
+                startPositionInt[1] = i - 1;
+
+            if (endPosition.substring(0, 1).equals(lettersDict.get(i)))
+                endPositionInt[1] = i - 1;
+        }
+
+        startPositionInt[0] = Integer.parseInt(startPosition.substring(1, 2)) - 1;
+        endPositionInt[0] = Integer.parseInt(endPosition.substring(1, 2)) - 1;
+
+        boolean startPositionLineOk = (startPositionInt[0] >= 0) && (startPositionInt[0] <= 7);
+        boolean startPositionColumnOk = (startPositionInt[1] >= 0) && (startPositionInt[1] <= 7);
+        boolean endPositionLineOk = (endPositionInt[0] >= 0) && (endPositionInt[0] <= 7);
+        boolean endPositionColumnOk = (endPositionInt[1] >= 0) && (endPositionInt[1] <= 7);
+
+        if (startPositionColumnOk && startPositionLineOk && endPositionColumnOk && endPositionLineOk)
+            this.movePiece(startPositionInt, endPositionInt);
+    }
+
     public void movePiece(int[] startPosition, int[] endPosition) {
         Piece pieceToMove = this.getPieceInBoard(startPosition[0], startPosition[1]);
         Piece.Type typePieceToMove = pieceToMove.getType();
