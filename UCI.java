@@ -72,14 +72,21 @@ public class UCI {
                 board.movePieceArena(input);
 
                 // Make our move on the board and give it to the Arena plateform
-                Move move = player.movePlayer(board);
-                board.movePiece(move.start_position, move.end_position);
+                try 
+                {
+                    Move move = player.movePlayer(board);
+                    board.movePiece(move.start_position, move.end_position);
 
-                String arenaMoveStart = Board.lettersDict.get(move.start_position[1] + 1) + Integer.toString(move.start_position[0] + 1);
-                String arenaMoveEnd = Board.lettersDict.get(move.end_position[1] + 1) + Integer.toString(move.end_position[0] + 1);
-                String arenaMove = arenaMoveStart + arenaMoveEnd;
+                    String arenaMoveStart = Board.lettersDict.get(move.start_position[1] + 1) + Integer.toString(move.start_position[0] + 1);
+                    String arenaMoveEnd = Board.lettersDict.get(move.end_position[1] + 1) + Integer.toString(move.end_position[0] + 1);
+                    String arenaMove = arenaMoveStart + arenaMoveEnd;
 
-                System.out.println("position moves " + arenaMove);
+                    System.out.println("position moves " + arenaMove);
+                } 
+                catch (InterruptedException e)
+                {
+                    
+                }
             }
         }
 
