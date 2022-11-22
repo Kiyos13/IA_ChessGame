@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Hashtable;
 
 public class Board {
@@ -328,6 +329,56 @@ public class Board {
          * La partie est nulle quand une position est telle qu’aucun joueur ne peut mater le roi adverse avec une série de coups légaux.
          * La partie est nulle lorsque le joueur ayant le trait n’a aucun coup légal et que son roi n’est pas en échec.
          */
+    }
+
+    public boolean isKingCheck(Piece.Color color){
+        int kingPositionRow = 0;
+        int kingPositionColumn = 0;
+        ArrayList<Move> possibleMoves = new ArrayList<>();
+        ArrayList<Position> currentPossibleMoves = new ArrayList<>();
+
+        for (int r = 0; r <= this.boardLength; r++) {
+            for (int c = 0; c <= this.boardLength; c++) {
+                Piece currentPiece = this.getPieceInBoard(r, c);
+                if (currentPiece.getType() == Piece.Type.King && currentPiece.getColor() == color){
+                    kingPositionRow = r;
+                    kingPositionColumn = c;
+                }
+                else if(currentPiece.getType() != Piece.Type.None && currentPiece.getColor() != color){
+                    currentPossibleMoves = currentPiece.getPossibleMoves2(this);
+                    for (Position pos: currentPossibleMoves) {
+                        Move move = new Move();
+                        move.start_position[0] = r;
+                        move.start_position[1] = c;
+                        move.end_position[0] = pos.r;
+                        move.end_position[1] = pos.c;
+                        possibleMoves.add(move);
+                    }
+                }
+            }
+        }
+        for (Move move: possibleMoves){
+            if (move.end_position[0] == kingPositionRow && move.end_position[1] == kingPositionColumn)
+                return true;
+        }
+        return false;
+    }
+
+    public boolean isKingCheckAtCoordinates(int rKing, int cKing, Piece.Color color){
+        ArrayList<Position> currentPossibleMoves = new ArrayList<>();
+        for (int r = 0; r <= this.boardLength; r++) {
+            for (int c = 0; c <= this.boardLength; c++) {
+                Piece currentPiece = this.getPieceInBoard(r, c);
+                if(currentPiece.getType() != Piece.Type.None && currentPiece.getColor() != color){
+                    currentPossibleMoves = currentPiece.getPossibleMoves2(this);
+                    for (Position pos: currentPossibleMoves) {
+                        if (rKing == pos.r && cKing == pos.c)
+                            return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public void boardCopy(Board board){
