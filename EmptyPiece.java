@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class EmptyPiece extends Piece {
 
     /********** ATTRIBUTEs **********/
@@ -20,6 +22,12 @@ public class EmptyPiece extends Piece {
         this.setNbPossibleMoves(0);
         return possibleMoves;  
     }
+
+    public ArrayList<Position> getPossibleMoves2(Board board) {
+        ArrayList<Position> possibleMoves = new ArrayList<>();
+        this.setNbPossibleMoves(0);
+        return possibleMoves;  
+    }   
 
     /********** CONSTRUCTOR **********/
     public EmptyPiece(int row, int column) {

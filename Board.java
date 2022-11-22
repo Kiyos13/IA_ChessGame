@@ -10,10 +10,11 @@ public class Board {
     public static Hashtable<Piece.Type, Integer> piecesValuesDict = new Hashtable<Piece.Type, Integer>();
 
     /********** ATTRIBUTs **********/
-	private static Piece[][] board;
+	private Piece[][] board;
     private int blackPoints;
     private int whitePoints;
     private Piece.Color winner;
+    public Piece.Color currentColor;
 
     /********** SETs **********/    
     public void setPieceInBoard(int row, int column, Piece piece) {
@@ -37,7 +38,7 @@ public class Board {
         return board[row][column];
     }
 
-    public static Piece[][] getBoard() {
+    public Piece[][] getBoard() {
         return board;
     }
 
@@ -156,8 +157,17 @@ public class Board {
         }
     }
 
+    public void emptyBoard() {
+        // Blanks
+        for (int r = 0; r <= boardLength; r++) {
+            for (int c = 0; c <= boardLength; c++) {
+                setPieceInBoard(r, c, new EmptyPiece(r, c));
+            }
+        }
+    }
+
     public void initBoard() {
-        this.initSizeBoard(); // Size of board
+        //this.initSizeBoard(); // Size of board
         
         this.initPawns();   // Pawns
         this.initRooks();   // Rooks
@@ -166,10 +176,6 @@ public class Board {
         this.initQueens();  // Queens
         this.initKings();   // Kings
         this.initBlanks();  // Blanks
-
-        setPieceInBoard(4, 4, new King(4, 4, Piece.Color.Black));
-        setPieceInBoard(4, 7, new Rook(4, 7, Piece.Color.Black));
-        setPieceInBoard(4, 0, new Rook(4, 0, Piece.Color.Black));
 
         this.setBlackPoints(0); // BlackPoints
         this.setWhitePoints(0); // WhitePoints
@@ -225,7 +231,7 @@ public class Board {
                 if (currentColor == Piece.Color.White)
                     System.out.printf("\u001B[35m");
                 else if (currentColor == Piece.Color.Black)
-                    System.out.printf("\u001B[34m");
+                    System.out.printf("\u001B[31m");
                 
                 if (currentType == Piece.Type.Pawn)
                     System.out.printf("   p\t");
@@ -298,6 +304,14 @@ public class Board {
             // Put empty piece to start position
             this.setPieceInBoard(startPosition[0], startPosition[1], new EmptyPiece(endPosition[0], endPosition[1]));
         }
+        
+        //Change the color of the current player
+        if (this.currentColor == Piece.Color.White){
+            this.currentColor = Piece.Color.Black;
+        }
+        else{
+            this.currentColor = Piece.Color.White;
+        }
     }
 
     public boolean gameIsFinished() {
@@ -316,10 +330,60 @@ public class Board {
          */
     }
 
+    public void boardCopy(Board board){
+        this.currentColor = board.currentColor;
+        for (int r = 0; r <= Board.boardLength; r++) {
+            for (int c = 0; c <= Board.boardLength; c++) {
+                Piece currentPiece = board.getPieceInBoard(r, c);
+                Piece.Type currentPieceType = currentPiece.type;
+                if (currentPieceType == Piece.Type.Pawn){
+                    Pawn newPiece = (Pawn) currentPiece;
+                    //new Pawn(r, c, currentPiece.color);
+                    Pawn newPawn = newPiece.copy();
+                    //newBoard.setPieceInBoard(r, c, newPawn);
+                    this.setPieceInBoard(r, c, newPawn);
+                }
+                else if (currentPieceType == Piece.Type.Bishop){
+                    Bishop newPiece = (Bishop) currentPiece;
+                    Bishop newBishop = newPiece.copy();
+                    //newBoard.setPieceInBoard(r, c, newBishop);
+                    this.setPieceInBoard(r, c, newBishop);
+                }
+                else if (currentPieceType == Piece.Type.King){
+                    King newPiece = (King) currentPiece;
+                    King newKing = newPiece.copy();
+                    //newBoard.setPieceInBoard(r, c, newKing);
+                    this.setPieceInBoard(r, c, newKing);
+                }
+                else if (currentPieceType == Piece.Type.Knight){
+                    Knight newPiece = (Knight) currentPiece;
+                    Knight newKnight = newPiece.copy();
+                    //newBoard.setPieceInBoard(r, c, newKnight);
+                    this.setPieceInBoard(r, c, newKnight);
+                }
+                else if (currentPieceType == Piece.Type.Queen){
+                    Queen newPiece = (Queen) currentPiece;
+                    Queen newQueen = newPiece.copy();
+                    //newBoard.setPieceInBoard(r, c, newQueen);
+                    this.setPieceInBoard(r, c, newQueen);
+                }
+                else if (currentPieceType == Piece.Type.Rook){
+                    Rook newPiece = (Rook) currentPiece;
+                    Rook newRook = newPiece.copy();
+                    //newBoard.setPieceInBoard(r, c, newRook);
+                    this.setPieceInBoard(r, c, newRook);
+                }
+            }
+        }
+    }   
+
     /********** CONSTRUCTOR **********/
     public Board() {
         this.initLettersDict();
         this.initPiecesValuesDict();
-        this.initBoard();
+        this.initSizeBoard(); // Size of board
+        this.currentColor = Piece.Color.White;
+        //this.initBoard();
     }
+
 }

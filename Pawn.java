@@ -1,7 +1,10 @@
+import java.util.ArrayList;
+
 public class Pawn extends Piece {
 
     /********** ATTRIBUTEs **********/
     private boolean isFirstMove;
+    public int val = 1;
 
     /********** SETs **********/
     public void setIsFirstMove(boolean isFirstM) {
@@ -43,6 +46,33 @@ public class Pawn extends Piece {
         return possibleMoves;
     }
 
+    public ArrayList<Position> getPossibleMovesStraight2(Board board, int pawnRow, int pawnColumn, int gap) {
+        boolean conditionRowMin, conditionRowMax, conditionCoumnMin, conditionColumnMax, targetIsEmpty;
+        boolean isPawnFirstMove = this.getIsFirstMove(), firstDistanceIsPossible = false;
+        ArrayList<Position> possibleMoves = new ArrayList<>();
+
+        // Loop for one or two step(s) down / up
+        for (int distance = 1; distance < 3; distance++) {
+            conditionRowMin = (pawnRow + gap * distance > -1);
+            conditionRowMax = (pawnRow + gap * distance <= Piece.maxPosition);
+            conditionCoumnMin = (pawnColumn > -1);
+            conditionColumnMax = (pawnColumn <= Piece.maxPosition);
+
+            if (conditionRowMin && conditionRowMax && conditionCoumnMin && conditionColumnMax) {
+                targetIsEmpty = (board.getPieceInBoard(pawnRow + gap * distance, pawnColumn).getColor() == Piece.Color.None);
+
+                if ((((distance == 2) && (isPawnFirstMove) && (firstDistanceIsPossible)) || (distance == 1)) && targetIsEmpty) {
+                    possibleMoves.add(new Position(pawnRow + gap * distance, pawnColumn));
+                    if (distance == 1)
+                        firstDistanceIsPossible = true;
+                }
+            }
+        }
+
+        this.setNbPossibleMoves(possibleMoves.size());
+        return possibleMoves;
+    }
+
     public int[][] getPossibleMovesSideways(Board board, int pawnRow, int pawnColumn, int gap) {
         boolean conditionRowMin, conditionRowMax, conditionCoumnMin, conditionColumnMax, targetIsEmpty;
         int nbOfPossibleMoves = 0;
@@ -55,7 +85,8 @@ public class Pawn extends Piece {
             conditionCoumnMin = (pawnColumn + sidewayGap > -1);
             conditionColumnMax = (pawnColumn + sidewayGap <= Piece.maxPosition);
             if (conditionRowMin && conditionRowMax && conditionCoumnMin && conditionColumnMax) {
-                if (board.getPieceInBoard(pawnRow + gap, pawnColumn + sidewayGap).getColor() == Piece.Color.White) {
+                Piece.Color color = board.getPieceInBoard(pawnRow + gap, pawnColumn + sidewayGap).getColor();
+                if (color != board.currentColor && color != Piece.Color.None) {
                     possibleMoves[nbOfPossibleMoves] = new int[] { pawnRow + gap, pawnColumn + sidewayGap };
                     nbOfPossibleMoves++;
                 }
@@ -63,6 +94,29 @@ public class Pawn extends Piece {
         }
 
         this.setNbPossibleMoves(nbOfPossibleMoves);
+        return possibleMoves;
+    }
+
+    public ArrayList<Position> getPossibleMovesSideways2(Board board, int pawnRow, int pawnColumn, int gap) {
+        boolean conditionRowMin, conditionRowMax, conditionCoumnMin, conditionColumnMax, targetIsEmpty;
+        int nbOfPossibleMoves = 0;
+        ArrayList<Position> possibleMoves = new ArrayList<>();
+
+        // Loop for sideway right (+1) and left (-1)
+        for (int sidewayGap = -1; sidewayGap <= 1; sidewayGap += 2) {
+            conditionRowMin = (pawnRow + gap > -1);
+            conditionRowMax = (pawnRow + gap <= Piece.maxPosition);
+            conditionCoumnMin = (pawnColumn + sidewayGap > -1);
+            conditionColumnMax = (pawnColumn + sidewayGap <= Piece.maxPosition);
+            if (conditionRowMin && conditionRowMax && conditionCoumnMin && conditionColumnMax) {
+                Piece.Color color = board.getPieceInBoard(pawnRow + gap, pawnColumn + sidewayGap).getColor();
+                if (color != board.currentColor && color != Piece.Color.None) {
+                    possibleMoves.add(new Position(pawnRow + gap, pawnColumn + sidewayGap));
+                }
+            }
+        }
+
+        this.setNbPossibleMoves(possibleMoves.size());
         return possibleMoves;
     }
 
@@ -98,9 +152,44 @@ public class Pawn extends Piece {
         return possibleMoves;
     }
 
+    @Override
+    public ArrayList<Position> getPossibleMoves2(Board board) {
+        Piece.Color pawnColor = this.getColor();
+        int pawnRow = this.getRow(), pawnColumn = this.getColumn();
+        int nbOfPossibleMovesStep1 = 0, nbOfPossibleMovesStep2 = 0, nbOfPossibleMoves = 0, gap = 1;
+        ArrayList<Position> possibleMovesStraight = new ArrayList<>();
+        ArrayList<Position> possibleMovesSideways = new ArrayList<>();
+        ArrayList<Position> possibleMoves = new ArrayList<>();
+
+        if (pawnColor == Piece.Color.White)
+            gap = -1;
+
+
+        possibleMovesStraight = getPossibleMovesStraight2(board, pawnRow, pawnColumn, gap);
+        possibleMovesSideways = getPossibleMovesSideways2(board, pawnRow, pawnColumn, gap);
+
+        nbOfPossibleMoves = nbOfPossibleMovesStep1 + nbOfPossibleMovesStep2;
+
+        for (Position pos: possibleMovesStraight){
+            possibleMoves.add(pos);
+        }
+        for (Position pos: possibleMovesSideways){
+            possibleMoves.add(pos);
+        }
+
+        this.setNbPossibleMoves(possibleMoves.size());
+        return possibleMoves;
+    }
+
     /********** CONSTRUCTOR **********/
     public Pawn(int row, int column, Color color) {
         super(row, column, color, Piece.Type.Pawn);
         setIsFirstMove(true);
+    }
+
+    public Pawn copy(){
+        Pawn p = new Pawn(this.row, this.column, this.color);
+        p.isFirstMove = this.isFirstMove;
+        return p;
     }
 }

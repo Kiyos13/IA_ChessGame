@@ -1,5 +1,8 @@
+import java.util.ArrayList;
+
 public class Queen extends Piece  {
-    
+    public int val = 9;
+
     /********** ABSTRACTs **********/
     @Override
     public int[][] getPossibleMoves(Board board) {
@@ -28,8 +31,37 @@ public class Queen extends Piece  {
         return possibleMoves;
     }
 
+    @Override
+    public ArrayList<Position> getPossibleMoves2(Board board) {
+        Piece.Color queenColor = this.getColor();
+        int queenRow = this.getRow(), queenColumn = this.getColumn();
+        int nbOfPossibleMovesStep1 = 0, nbOfPossibleMovesStep2 = 0, nbOfPossibleMoves = 0;
+        ArrayList<Position> possibleMovesRook = new ArrayList<>();
+        ArrayList<Position> possibleMovesBishop = new ArrayList<>();
+        ArrayList<Position> possibleMoves = new ArrayList<>();
+
+        possibleMovesRook = Rook.getPossibleMovesRook2(board, queenRow, queenColumn, queenColor);
+        possibleMovesBishop = Bishop.getPossibleMovesBishop2(board, queenRow, queenColumn, queenColor);
+
+        nbOfPossibleMoves = nbOfPossibleMovesStep1 + nbOfPossibleMovesStep2;
+
+        for (Position pos: possibleMovesBishop){
+            possibleMoves.add(pos);
+        }
+        for (Position pos: possibleMovesRook){
+            possibleMoves.add(pos);
+        }
+        this.setNbPossibleMoves(possibleMoves.size());
+        return possibleMoves;
+    }
+
     /********** CONSTRUCTOR **********/
     public Queen(int row, int column, Color color) {
         super(row, column, color, Piece.Type.Queen);
+    }
+
+    public Queen copy(){
+        Queen q = new Queen(this.row, this.column, this.color);
+        return q;
     }
 }

@@ -1,8 +1,11 @@
+import java.util.ArrayList;
+
 public abstract class Piece {
 
     /********** VARs **********/
     public static int minPosition = 0;
     public static int maxPosition = 7;
+    public int val = 2;
 
     /********** ENUMs **********/
     enum Color {
@@ -22,12 +25,12 @@ public abstract class Piece {
     }
     
     /********** ATTRIBUTEs **********/
-    private int row;
-	private int column;
-    private Color color;
-    private Color enemyColor;
-    private Type type;
-    private int nbPossibleMoves;
+    public int row;
+	public int column;
+    public Color color;
+    public Color enemyColor;
+    public Type type;
+    public int nbPossibleMoves;
 
     /********** SETs **********/
     public void setRow(int row) {
@@ -76,6 +79,30 @@ public abstract class Piece {
         return type;
     }
 
+    public int getValue(){
+        if (this.getType() == Piece.Type.Bishop){
+            return 3;
+        }
+        else if(this.getType() == Piece.Type.King){
+            return 0;
+        }
+        else if(this.getType() == Piece.Type.Knight){
+            return 3;
+        }
+        else if(this.getType() == Piece.Type.Pawn){
+            return 1;
+        }
+        else if(this.getType() == Piece.Type.Queen){
+            return 9;
+        }
+        else if(this.getType() == Piece.Type.Rook){
+            return 5;
+        }
+        else{
+            return 0;
+        }
+    }
+
     public int getNbPossibleMoves() {
         return nbPossibleMoves;
     }
@@ -99,7 +126,7 @@ public abstract class Piece {
 
     public boolean pieceIsControlled(Board board) {
         int targetRow = this.getRow(), targetColumn = this.getColumn();
-        int[][] currentPossibleMoves = new int[maxPosition * maxPosition][2];
+        ArrayList<Position> currentPossibleMoves = new ArrayList<>();
         Color enemyColor = this.getEnemyColor(), currentColor;
         Piece currentPiece;
 
@@ -108,9 +135,9 @@ public abstract class Piece {
                 currentPiece = board.getPieceInBoard(row, column);
                 currentColor = currentPiece.getColor();
                 if (currentColor == enemyColor) {
-                    currentPossibleMoves = currentPiece.getPossibleMoves(board);
-                    for (int nbMoves = 0; nbMoves < currentPossibleMoves.length; nbMoves++) {
-                        if ((currentPossibleMoves[nbMoves][0] == targetRow) && (currentPossibleMoves[nbMoves][1] == targetColumn))
+                    currentPossibleMoves = currentPiece.getPossibleMoves2(board);
+                    for (int nbMoves = 0; nbMoves < currentPossibleMoves.size(); nbMoves++) {
+                        if ((currentPossibleMoves.get(nbMoves).r == targetRow) && (currentPossibleMoves.get(nbMoves).c == targetColumn))
                             return true;
                     }
                 }
@@ -121,6 +148,7 @@ public abstract class Piece {
 
     /********** ABSTRACTs **********/
     public abstract int[][] getPossibleMoves(Board board);
+    public abstract ArrayList<Position> getPossibleMoves2(Board board);
 
     /********** CONSTRUCTOR **********/
     public Piece(int row, int column, Color color, Type type) {
