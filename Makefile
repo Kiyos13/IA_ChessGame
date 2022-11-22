@@ -5,7 +5,7 @@ game:
 	javac Game.java
 
 jar:
-	jar cfm PauwelsPommier.jar MANIFEST.MF *.class
+	make clean && make game && jar cfm PauwelsPommier.jar MANIFEST.MF *.class
 
 clean:
 	rm -f *.class PauwelsPommier.jar
