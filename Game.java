@@ -16,7 +16,7 @@ public class Game {
         Board board = new Board();
         board.initBoard();
         board.displayBoard();
-
+        System.out.println(board.isKingCheckAtCoordinates(5, 4, Piece.Color.Black));
         /*Piece currentPiece;
         Piece.Color currentColor = Piece.Color.None;
         Piece.Type currentType = Piece.Type.None;
@@ -83,17 +83,17 @@ public class Game {
                 */
                 if (board.currentColor == player1.color){
                     Move move = player1.movePlayer(board);
-                    System.out.printf("PLAYER 1 %d, %d -> %d %d", move.start_position[0], move.start_position[1], move.end_position[0], move.end_position[1]);
+                    System.out.printf("PLAYER 1 %d, %d -> %d %d\n\n", move.start_position[0], move.start_position[1], move.end_position[0], move.end_position[1]);
                     board.movePiece(move.start_position, move.end_position);
                 }
                 else{
                     Move move = player2.movePlayer2(board);
-                    System.out.printf("PLAYER 2 %d, %d -> %d %d", move.start_position[0], move.start_position[1], move.end_position[0], move.end_position[1]);
+                    System.out.printf("PLAYER 2 %d, %d -> %d %d\n\n", move.start_position[0], move.start_position[1], move.end_position[0], move.end_position[1]);
                     board.movePiece(move.start_position, move.end_position);
                 }
                 n++;
-                board.displayBoard();
-                //Thread.sleep(5000);
+                //board.displayBoard();
+                //Thread.sleep(1000);
                 
                 //currentPlayer = (currentPlayer == Piece.Color.White) ? Piece.Color.Black : Piece.Color.White;                
             }

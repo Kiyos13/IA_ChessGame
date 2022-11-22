@@ -20,6 +20,9 @@ public class Player {
                 if (currentColor == board.currentColor) {
                     score -= currentPiece.getValue();
                 }
+                else{
+                    score += currentPiece.getValue();
+                }
             }
         }
         return score;
@@ -81,15 +84,16 @@ public class Player {
         return movesPossiblesList;
     }
 
-    public MiniMaxReturn miniMax(Board board, int depth, boolean isMaximize, Move m){
+    public MiniMaxReturn miniMax(Board board, int depth, boolean isMaximize, Move m) throws InterruptedException{
         MiniMaxReturn returnVal = new MiniMaxReturn();
         returnVal.move = m;
 
         if (board.gameIsFinished() || depth == 0){
             returnVal.val = getScore(board);
-            System.out.println("Couleur : " + board.currentColor);
-            System.out.println("Score :" + returnVal.val);
+            //System.out.println("Couleur : " + board.currentColor);
+            //System.out.println("Score :" + returnVal.val);
             //board.displayBoard();
+            //Thread.sleep(1000);
             return returnVal;
         }
 
@@ -97,7 +101,7 @@ public class Player {
             int val = -1000;
             ArrayList<Move> movesPossiblesList = generateLegalMoves2(board);
             for (Move move: movesPossiblesList){
-                System.out.printf("%d,%d -> %d,%d\n", move.start_position[0], move.start_position[1], move.end_position[0], move.end_position[1]);
+                //System.out.printf("%d,%d -> %d,%d\n", move.start_position[0], move.start_position[1], move.end_position[0], move.end_position[1]);
                 Board previousBoard = new Board();
                 previousBoard.emptyBoard();
                 previousBoard.boardCopy(board);
@@ -137,11 +141,13 @@ public class Player {
         return returnVal;
     }
 
-    public MiniMaxReturn alphaBeta(Board board, int depth, boolean isMaximize, Move m, int alpha, int beta){
+    public MiniMaxReturn alphaBeta(Board board, int depth, boolean isMaximize, Move m, int alpha, int beta) throws InterruptedException{
         MiniMaxReturn returnVal = new MiniMaxReturn();
         returnVal.move = m;
 
         if (board.gameIsFinished() || depth == 0){
+            board.displayBoard();
+            Thread.sleep(10000);
             returnVal.val = getScore(board);
             return returnVal;
         }
@@ -201,11 +207,13 @@ public class Player {
         return returnVal;
     }
 
-    public Move movePlayer(Board board){
+    public Move movePlayer(Board board) throws InterruptedException{
         System.out.println("PLAYER 1 MINIMAX");
         Board copyBoard = new Board();
         copyBoard.emptyBoard();
         copyBoard.boardCopy(board);
+        System.out.println("BOARD NOT COPY");
+        board.displayBoard();
         System.out.println("INTIIAL BOARD COPY");
         copyBoard.displayBoard();
         //MiniMaxReturn miniMaxReturnVal = this.alphaBeta(copyBoard, this.depth, true, null, -10000, 10000);
