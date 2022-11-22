@@ -302,7 +302,7 @@ public class Board {
         }
         else {
             // Put empty piece to start position
-            this.setPieceInBoard(startPosition[0], startPosition[1], new EmptyPiece(endPosition[0], endPosition[1]));
+            this.setPieceInBoard(startPosition[0], startPosition[1], new EmptyPiece(startPosition[0], startPosition[1]));
         }
         
         //Change the color of the current player
