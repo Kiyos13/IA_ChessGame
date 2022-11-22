@@ -4,5 +4,8 @@ all:
 game:
 	javac Game.java
 
+jar:
+	jar cfm PauwelsPommier.jar MANIFEST.MF *.class
+
 clean:
-	rm -f *.class
+	rm -f *.class PauwelsPommier.jar

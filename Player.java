@@ -146,7 +146,7 @@ public class Player {
         returnVal.move = m;
 
         if (board.gameIsFinished() || depth == 0){
-            board.displayBoard();
+            //board.displayBoard();
             Thread.sleep(10000);
             returnVal.val = getScore(board);
             return returnVal;
@@ -213,9 +213,9 @@ public class Player {
         copyBoard.emptyBoard();
         copyBoard.boardCopy(board);
         //System.out.println("BOARD NOT COPY");
-        board.displayBoard();
+        //board.displayBoard();
         //System.out.println("INTIIAL BOARD COPY");
-        copyBoard.displayBoard();
+        //copyBoard.displayBoard();
         //MiniMaxReturn miniMaxReturnVal = this.alphaBeta(copyBoard, this.depth, true, null, -10000, 10000);
         MiniMaxReturn miniMaxReturnVal = this.miniMax(copyBoard, this.depth, true, null);
         //System.out.println("Valeur : " + miniMaxReturnVal.val);
@@ -229,7 +229,7 @@ public class Player {
         copyBoard.emptyBoard();
         copyBoard.boardCopy(board);
         System.out.println("INTIIAL BOARD COPY");
-        copyBoard.displayBoard();
+        //copyBoard.displayBoard();
         ArrayList<Move> moves = this.generateLegalMoves2(copyBoard);
         int n = moves.size();
         System.out.println(n);

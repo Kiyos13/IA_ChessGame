@@ -240,3 +240,6 @@
 .history/Test_20221122034906.java
 .history/Test_20221122053800.java
 .history/Test_20221122053815.java
+
+*.class
+*.jar
