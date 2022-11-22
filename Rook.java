@@ -6,7 +6,6 @@ public class Rook extends Piece {
     /********** ATTRIBUTEs **********/
     private boolean hasAlreadyMoved;
     private boolean isControlled; // TODO : fct to detect if a rook is controlled by another piece (for casting)
-    public int val = 5;
     
     /********** SETs **********/
     public void setHasAlreadyMoved(boolean hasAlreadyM) {

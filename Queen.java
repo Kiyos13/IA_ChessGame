@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 
 public class Queen extends Piece  {
-    public int val = 9;
 
     /********** ABSTRACTs **********/
     @Override

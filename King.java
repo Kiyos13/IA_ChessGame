@@ -7,7 +7,6 @@ public class King extends Piece {
     private boolean hasBeenCheck;
     private boolean hasAlreadyMoved;
     private boolean isControlled; // TODO : fct to detect if a king is controlled by another piece (for casting)
-    public int val = 0;
 
     /********** SETs **********/
     public void setHasBeenCheck(boolean hasBeenC) {
@@ -47,7 +46,7 @@ public class King extends Piece {
             {kingRow - 1, kingColumn}, {kingRow - 1, kingColumn + 1}, 
             {kingRow, kingColumn + 1}, {kingRow + 1, kingColumn + 1}, 
             {kingRow + 1, kingColumn}, {kingRow + 1, kingColumn - 1}, 
-            {kingRow, kingColumn - 1}, {kingRow - 1, kingColumn + 1}
+            {kingRow, kingColumn - 1}, {kingRow - 1, kingColumn - 1}
         };
 
         for (int position = 0; position <= Piece.maxPosition; position++) {
@@ -58,7 +57,9 @@ public class King extends Piece {
             conditionColumnMax = (possiblePositions[position][1] <= Piece.maxPosition);
             if (conditionRowMin && conditionRowMax && conditionCoumnMin && conditionColumnMax) {
                 currentColor = board.getPieceInBoard(possiblePositions[position][0], possiblePositions[position][1]).getColor();
-                if (currentColor == kingColor)
+                int rKing = possiblePositions[position][0];
+                int cKing = possiblePositions[position][1];
+                if (currentColor == kingColor || board.isKingCheckAtCoordinates(rKing, cKing, kingColor))
                     currentTargetIsPossible = false;
                 if (currentTargetIsPossible) {
                     possibleMoves[nbOfPossibleMoves] = new int[] { possiblePositions[position][0], possiblePositions[position][1] };
@@ -92,8 +93,11 @@ public class King extends Piece {
             conditionCoumnMin = (possiblePositions[position][1] > -1);
             conditionColumnMax = (possiblePositions[position][1] <= Piece.maxPosition);
             if (conditionRowMin && conditionRowMax && conditionCoumnMin && conditionColumnMax) {
+                System.out.println("OUI");
                 currentColor = board.getPieceInBoard(possiblePositions[position][0], possiblePositions[position][1]).getColor();
                 if (currentColor == kingColor)
+                    currentTargetIsPossible = false;
+                if (board.isKingCheckAtCoordinates2(possiblePositions[position][0], possiblePositions[position][1], kingColor))
                     currentTargetIsPossible = false;
                 if (currentTargetIsPossible) {
                     possibleMoves.add(new Position(possiblePositions[position][0], possiblePositions[position][1]));
@@ -106,7 +110,7 @@ public class King extends Piece {
         return possibleMoves;
     }
 
-    public int[][] getPossibleMovesCastling(Board board, int kingRow, int kingColumn, Piece.Color kingColor) {
+    /*public int[][] getPossibleMovesCastling(Board board, int kingRow, int kingColumn, Piece.Color kingColor) {
         Piece[] rooks = new Piece[2];
         int nbOfPossibleMoves = 0;
         int kingIsWhiteInt = (kingColor == Piece.Color.White) ? 1 : 0;
@@ -161,7 +165,7 @@ public class King extends Piece {
 
         this.setNbPossibleMoves(nbOfPossibleMoves);
         return possibleMoves;
-    }
+    }*/
 
     /*public ArrayList<Position> getPossibleMovesCastling2(Board board, int kingRow, int kingColumn, Piece.Color kingColor) {
         Piece[] rooks = new Piece[2];
@@ -227,21 +231,22 @@ public class King extends Piece {
         int kingRow = this.getRow(), kingColumn = this.getColumn();
         int nbOfPossibleMovesStep1 = 0, nbOfPossibleMovesStep2 = 0,  nbOfPossibleMoves = 0;
         int[][] possibleMovesClassic = new int[Piece.maxPosition * Piece.maxPosition][2];
-        int[][] possibleMovesCastling = new int[Piece.maxPosition * Piece.maxPosition][2];
+        //int[][] possibleMovesCastling = new int[Piece.maxPosition * Piece.maxPosition][2];
         int[][] possibleMoves = new int[Piece.maxPosition * Piece.maxPosition][2];
 
         possibleMovesClassic = getPossibleMovesClassic(board, kingRow, kingColumn, kingColor);
         nbOfPossibleMovesStep1 = this.getNbPossibleMoves();
-        possibleMovesCastling = getPossibleMovesCastling(board, kingRow, kingColumn, kingColor);
-        nbOfPossibleMovesStep2 = this.getNbPossibleMoves();
+        //possibleMovesCastling = getPossibleMovesCastling(board, kingRow, kingColumn, kingColor);
+        nbOfPossibleMovesStep2 = 0;//this.getNbPossibleMoves();
 
         nbOfPossibleMoves = nbOfPossibleMovesStep1 + nbOfPossibleMovesStep2;
 
         for (int i = 0; i < nbOfPossibleMoves; i++) {
             if (i < nbOfPossibleMovesStep1)
                 possibleMoves[i] = possibleMovesClassic[i];
-            else
-                possibleMoves[i] = possibleMovesCastling[i - nbOfPossibleMovesStep1];
+            else{
+                //possibleMoves[i] = possibleMovesCastling[i - nbOfPossibleMovesStep1];
+            }
         }
 
         this.setNbPossibleMoves(nbOfPossibleMoves);

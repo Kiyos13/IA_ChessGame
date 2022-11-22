@@ -1,14 +1,14 @@
 import java.util.*;
 
-
 public class UCI {
     
     static String ENGINENAME = "PauwelsPommier";
     static Board board;
     static Player player;
     static int nbMoves;
+    private int firstMove = 0;
 
-    public static void uciCommunication() {
+    public void uciCommunication() {
         Scanner input = new Scanner(System.in);
 
         while (true) {
@@ -45,23 +45,33 @@ public class UCI {
     }
 
     public static void inputIsReady() {
-         System.out.println("readyok");
+        System.out.println("readyok");
     }
 
     public static void inputUCINewGame() {
         board = new Board();
         board.initBoard();
         player = new Player();
-        player.initPlayer(Piece.Color.Black);
         nbMoves = 0;
     }
 
-    public static void inputPosition(String input) {
+    public void inputPosition(String input) {
         input = input.substring(9).concat(" ");
 
         if (input.contains("moves")) {
             String[] lastMoveList = input.split(" ");
             String lastMove = lastMoveList[lastMoveList.length - 1];
+            int n = lastMoveList.length;
+
+            if (this.firstMove == 0){
+                if (n % 2 == 0)
+                    player.initPlayer(Piece.Color.Black);
+                else{
+                    player.initPlayer(Piece.Color.White);
+                }
+                this.firstMove = 1;
+            }
+
             input = lastMove;
 
             int inputLength = ((String) input).length();

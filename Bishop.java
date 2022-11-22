@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 
 public class Bishop extends Piece {
-    public int val = 3;
 
     /********** SUB_FUNCTs **********/
     public static int[][] getPossibleMovesBishop(Board board, int bishopRow, int bishopColumn, Piece.Color bishopColor) {

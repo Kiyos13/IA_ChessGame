@@ -99,7 +99,7 @@ public class Player {
 
         if (isMaximize){
             int val = -1000;
-            ArrayList<Move> movesPossiblesList = generateLegalMoves2(board);
+            ArrayList<Move> movesPossiblesList = generateLegalMoves(board);
             for (Move move: movesPossiblesList){
                 //System.out.printf("%d,%d -> %d,%d\n", move.start_position[0], move.start_position[1], move.end_position[0], move.end_position[1]);
                 Board previousBoard = new Board();

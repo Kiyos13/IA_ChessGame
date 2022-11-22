@@ -3,7 +3,6 @@ import java.util.Arrays;
 
 public class Knight extends Piece {
     
-    public int val = 3;
     /********** FUNCTIONs **********/
     public int[][][] movesPaths(int knightRow, int knightColumn) {
         int[][][] paths = {

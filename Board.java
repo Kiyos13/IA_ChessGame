@@ -412,15 +412,84 @@ public class Board {
         return false;
     }
 
-    public boolean isKingCheckAtCoordinates(int rKing, int cKing, Piece.Color color){
-        ArrayList<Position> currentPossibleMoves = new ArrayList<>();
-        for (int r = 0; r <= this.boardLength; r++) {
-            for (int c = 0; c <= this.boardLength; c++) {
+    public Position getCoordinatesForKing(Piece.Color color){
+        for (int r = 0; r <= Board.boardLength; r++) {
+            for (int c = 0; c <= Board.boardLength; c++) {
                 Piece currentPiece = this.getPieceInBoard(r, c);
-                if(currentPiece.getType() != Piece.Type.None && currentPiece.getColor() != color){
+                if (currentPiece.getType() == Piece.Type.King && currentPiece.getColor() == color){
+                    Position pos = new Position(r, c);
+                    System.out.printf("ROI EN %s,%s\n", pos.r, pos.c);
+                    return pos;
+                }
+            }
+        }
+        return new Position(0, 0);
+     }
+
+    public boolean isKingCheckAtCoordinates(int rKing, int cKing, Piece.Color color){
+        Position pos = this.getCoordinatesForKing(color);
+    
+        System.out.printf("ECHEC POUR COORDONNEES (%s,%s)\n", rKing, cKing);
+        int[][] currentPossibleMoves = new int[Piece.maxPosition * Piece.maxPosition][2];
+        int currentNbPossibleMoves = 0;
+        for (int r = 0; r <= Board.boardLength; r++) {
+            for (int c = 0; c <= Board.boardLength; c++) {
+                Piece currentPiece = this.getPieceInBoard(r, c);
+                if(currentPiece.getType() != Piece.Type.None && currentPiece.getType() != Piece.Type.King && currentPiece.getColor() != color){
+                    if(currentPiece.getType() == Piece.Type.Pawn && cKing != c){
+                        if (currentPiece.getColor() == Piece.Color.Black){
+                            if (r - 1 == rKing && c - 1 == cKing)
+                                return true;
+                            else if (r - 1 == rKing && c + 1 == cKing)
+                                return true;
+                        }
+                        else{
+                            if (r + 1 == rKing && c - 1 == cKing)
+                                return true;
+                            else if (r + 1 == rKing && c + 1 == cKing)
+                                return true;
+                        }
+                    }
+                    else if (currentPiece.getType() != Piece.Type.Pawn){
+                        System.out.printf("\nOui : %s,%s -> %s\n", r, c, currentPiece.getType());
+                        Board trainingBoard = new Board();
+                        trainingBoard.emptyBoard();
+                        trainingBoard.boardCopy(this);
+                        Move move = new Move();
+                        move.start_position[0] = pos.r;
+                        move.start_position[1] = pos.c;
+                        move.end_position[0] = rKing;
+                        move.end_position[1] = cKing;
+                        trainingBoard.movePiece(move.start_position, move.end_position);
+
+                        currentPossibleMoves = currentPiece.getPossibleMoves(trainingBoard);
+                        currentNbPossibleMoves = currentPiece.getNbPossibleMoves();
+                        for (int i = 0; i < currentNbPossibleMoves; i++){
+                            System.out.printf("Position (%s,%s) -> (%s,%s)\n", r, c, currentPossibleMoves[i][0], currentPossibleMoves[i][1]);                                               
+                            if (rKing == currentPossibleMoves[i][0] && cKing == currentPossibleMoves[i][1])
+                                return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean isKingCheckAtCoordinates2(int rKing, int cKing, Piece.Color color){
+        ArrayList<Position> currentPossibleMoves = new ArrayList<>();
+        for (int r = 0; r <= Board.boardLength; r++) {
+            for (int c = 0; c <= Board.boardLength; c++) {
+                Piece currentPiece = this.getPieceInBoard(r, c);
+                if(currentPiece.getType() != Piece.Type.None && currentPiece.getType() != Piece.Type.King && currentPiece.getColor() != color){
                     currentPossibleMoves = currentPiece.getPossibleMoves2(this);
                     for (Position pos: currentPossibleMoves) {
-                        if (rKing == pos.r && cKing == pos.c)
+                        if (currentPiece.getType() == Piece.Type.Pawn){
+                            if (rKing == pos.r && cKing == pos.c && pos.c != c){
+                                return true;
+                            }
+                        }
+                        else if (rKing == pos.r && cKing == pos.c)
                             return true;
                     }
                 }
