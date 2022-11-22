@@ -126,7 +126,7 @@ public class Board {
         // Positions
         int firstRow = 0;
         int lastRow = boardLength;
-        int queenColumn = 3;
+        int queenColumn = 4;
 
         // Queens
         setPieceInBoard(firstRow, queenColumn, new Queen(firstRow, queenColumn, Piece.Color.Black));
@@ -137,7 +137,7 @@ public class Board {
         // Positions
         int firstRow = 0;
         int lastRow = boardLength;
-        int kingColumn = 4;
+        int kingColumn = 3;
 
         // Kings
         setPieceInBoard(firstRow, kingColumn, new King(firstRow, kingColumn, Piece.Color.Black));
@@ -176,7 +176,7 @@ public class Board {
         this.initQueens();  // Queens
         this.initKings();   // Kings
         this.initBlanks();  // Blanks
-
+        
         this.setBlackPoints(0); // BlackPoints
         this.setWhitePoints(0); // WhitePoints
         this.setWinner(Piece.Color.None); // Winner
