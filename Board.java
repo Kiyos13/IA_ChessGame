@@ -70,8 +70,8 @@ public class Board {
 
     private void initPawns() {
         // Positions
-        int blackPawnsRow = 1;
-        int whitePawnsRow = boardLength - 1;
+        int blackPawnsRow = boardLength - 1;
+        int whitePawnsRow = 1;
 
         // Pawns
         for (int c = 0; c <= boardLength; c++) {
@@ -88,10 +88,10 @@ public class Board {
         int rookLastColumn = boardLength;
 
         // Rooks
-        setPieceInBoard(firstRow, rookFirstColumn, new Rook(firstRow, rookFirstColumn, Piece.Color.Black));
-        setPieceInBoard(firstRow, rookLastColumn, new Rook(firstRow, rookLastColumn, Piece.Color.Black));
-        setPieceInBoard(lastRow, rookFirstColumn, new Rook(lastRow, rookFirstColumn, Piece.Color.White));
-        setPieceInBoard(lastRow, rookLastColumn, new Rook(lastRow, rookLastColumn, Piece.Color.White));
+        setPieceInBoard(firstRow, rookFirstColumn, new Rook(firstRow, rookFirstColumn, Piece.Color.White));
+        setPieceInBoard(firstRow, rookLastColumn, new Rook(firstRow, rookLastColumn, Piece.Color.White));
+        setPieceInBoard(lastRow, rookFirstColumn, new Rook(lastRow, rookFirstColumn, Piece.Color.Black));
+        setPieceInBoard(lastRow, rookLastColumn, new Rook(lastRow, rookLastColumn, Piece.Color.Black));
     }
 
     private void initKnights() {
@@ -102,10 +102,10 @@ public class Board {
         int knightLastColumn = boardLength - 1;
 
         // Knights
-        setPieceInBoard(firstRow, knightFirstColumn, new Knight(firstRow, knightFirstColumn, Piece.Color.Black));
-        setPieceInBoard(firstRow, knightLastColumn, new Knight(firstRow, knightLastColumn, Piece.Color.Black));
-        setPieceInBoard(lastRow, knightFirstColumn, new Knight(lastRow, knightFirstColumn, Piece.Color.White));
-        setPieceInBoard(lastRow, knightLastColumn, new Knight(lastRow, knightLastColumn, Piece.Color.White));
+        setPieceInBoard(firstRow, knightFirstColumn, new Knight(firstRow, knightFirstColumn, Piece.Color.White));
+        setPieceInBoard(firstRow, knightLastColumn, new Knight(firstRow, knightLastColumn, Piece.Color.White));
+        setPieceInBoard(lastRow, knightFirstColumn, new Knight(lastRow, knightFirstColumn, Piece.Color.Black));
+        setPieceInBoard(lastRow, knightLastColumn, new Knight(lastRow, knightLastColumn, Piece.Color.Black));
     }
 
     private void initBishops() {
@@ -116,10 +116,10 @@ public class Board {
         int bishopLastColumn = boardLength - 2;
 
         // Bishops
-        setPieceInBoard(firstRow, bishopFirstColumn, new Bishop(firstRow, bishopFirstColumn, Piece.Color.Black));
-        setPieceInBoard(firstRow, bishopLastColumn, new Bishop(firstRow, bishopLastColumn, Piece.Color.Black));
-        setPieceInBoard(lastRow, bishopFirstColumn, new Bishop(lastRow, bishopFirstColumn, Piece.Color.White));
-        setPieceInBoard(lastRow, bishopLastColumn, new Bishop(lastRow, bishopLastColumn, Piece.Color.White));
+        setPieceInBoard(firstRow, bishopFirstColumn, new Bishop(firstRow, bishopFirstColumn, Piece.Color.White));
+        setPieceInBoard(firstRow, bishopLastColumn, new Bishop(firstRow, bishopLastColumn, Piece.Color.White));
+        setPieceInBoard(lastRow, bishopFirstColumn, new Bishop(lastRow, bishopFirstColumn, Piece.Color.Black));
+        setPieceInBoard(lastRow, bishopLastColumn, new Bishop(lastRow, bishopLastColumn, Piece.Color.Black));
     }
 
     private void initQueens() {
@@ -129,8 +129,8 @@ public class Board {
         int queenColumn = 4;
 
         // Queens
-        setPieceInBoard(firstRow, queenColumn, new Queen(firstRow, queenColumn, Piece.Color.Black));
-        setPieceInBoard(lastRow, queenColumn, new Queen(lastRow, queenColumn, Piece.Color.White));
+        setPieceInBoard(firstRow, queenColumn, new Queen(firstRow, queenColumn, Piece.Color.White));
+        setPieceInBoard(lastRow, queenColumn, new Queen(lastRow, queenColumn, Piece.Color.Black));
     }
 
     private void initKings() {
@@ -140,8 +140,8 @@ public class Board {
         int kingColumn = 3;
 
         // Kings
-        setPieceInBoard(firstRow, kingColumn, new King(firstRow, kingColumn, Piece.Color.Black));
-        setPieceInBoard(lastRow, kingColumn, new King(lastRow, kingColumn, Piece.Color.White));
+        setPieceInBoard(firstRow, kingColumn, new King(firstRow, kingColumn, Piece.Color.White));
+        setPieceInBoard(lastRow, kingColumn, new King(lastRow, kingColumn, Piece.Color.Black));
     }
 
     private void initBlanks() {
