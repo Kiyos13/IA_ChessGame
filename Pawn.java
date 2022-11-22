@@ -125,13 +125,13 @@ public class Pawn extends Piece {
     public int[][] getPossibleMoves(Board board) {
         Piece.Color pawnColor = this.getColor();
         int pawnRow = this.getRow(), pawnColumn = this.getColumn();
-        int nbOfPossibleMovesStep1 = 0, nbOfPossibleMovesStep2 = 0, nbOfPossibleMoves = 0, gap = 1;
+        int nbOfPossibleMovesStep1 = 0, nbOfPossibleMovesStep2 = 0, nbOfPossibleMoves = 0, gap = -1;
         int[][] possibleMovesStraight = new int[Piece.maxPosition * Piece.maxPosition][2];
         int[][] possibleMovesSideways = new int[Piece.maxPosition * Piece.maxPosition][2];
         int[][] possibleMoves = new int[Piece.maxPosition * Piece.maxPosition][2];
 
         if (pawnColor == Piece.Color.White)
-            gap = -1;
+            gap = 1;
 
 
         possibleMovesStraight = getPossibleMovesStraight(board, pawnRow, pawnColumn, gap);
@@ -156,13 +156,13 @@ public class Pawn extends Piece {
     public ArrayList<Position> getPossibleMoves2(Board board) {
         Piece.Color pawnColor = this.getColor();
         int pawnRow = this.getRow(), pawnColumn = this.getColumn();
-        int nbOfPossibleMovesStep1 = 0, nbOfPossibleMovesStep2 = 0, nbOfPossibleMoves = 0, gap = 1;
+        int nbOfPossibleMovesStep1 = 0, nbOfPossibleMovesStep2 = 0, nbOfPossibleMoves = 0, gap = -1;
         ArrayList<Position> possibleMovesStraight = new ArrayList<>();
         ArrayList<Position> possibleMovesSideways = new ArrayList<>();
         ArrayList<Position> possibleMoves = new ArrayList<>();
 
         if (pawnColor == Piece.Color.White)
-            gap = -1;
+            gap = 1;
 
 
         possibleMovesStraight = getPossibleMovesStraight2(board, pawnRow, pawnColumn, gap);
