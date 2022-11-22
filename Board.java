@@ -299,16 +299,18 @@ public class Board {
             Piece promotedPiece = null;
             String promotedLetter = move.substring(4, 5);
 
+            Piece.Color colorPiece = this.getPieceInBoard(endPositionInt[0], endPositionInt[1]).getColor();
+
             if (promotedLetter.equals("p"))
-                promotedPiece = new Pawn(endPositionInt[0], endPositionInt[1], Piece.Color.Black);
+                promotedPiece = new Pawn(endPositionInt[0], endPositionInt[1], colorPiece);
             else if (promotedLetter.equals("r"))
-                promotedPiece = new Rook(endPositionInt[0], endPositionInt[1], Piece.Color.Black);
+                promotedPiece = new Rook(endPositionInt[0], endPositionInt[1], colorPiece);
             else if (promotedLetter.equals("k"))
-                promotedPiece = new Knight(endPositionInt[0], endPositionInt[1], Piece.Color.Black);
+                promotedPiece = new Knight(endPositionInt[0], endPositionInt[1], colorPiece);
             else if (promotedLetter.equals("b"))
-                promotedPiece = new Bishop(endPositionInt[0], endPositionInt[1], Piece.Color.Black);
+                promotedPiece = new Bishop(endPositionInt[0], endPositionInt[1], colorPiece);
             else if (promotedLetter.equals("q"))
-                promotedPiece = new Queen(endPositionInt[0], endPositionInt[1], Piece.Color.Black);
+                promotedPiece = new Queen(endPositionInt[0], endPositionInt[1], colorPiece);
 
             if (promotedPiece != null)
                 this.setPieceInBoard(endPositionInt[0], endPositionInt[1], promotedPiece);
