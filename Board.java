@@ -294,6 +294,25 @@ public class Board {
 
         if (startPositionColumnOk && startPositionLineOk && endPositionColumnOk && endPositionLineOk)
             this.movePiece(startPositionInt, endPositionInt);
+
+        if (move.length() == 5) {
+            Piece promotedPiece = null;
+            String promotedLetter = move.substring(4, 5);
+
+            if (promotedLetter.equals("p"))
+                promotedPiece = new Pawn(endPositionInt[0], endPositionInt[1], Piece.Color.Black);
+            else if (promotedLetter.equals("r"))
+                promotedPiece = new Rook(endPositionInt[0], endPositionInt[1], Piece.Color.Black);
+            else if (promotedLetter.equals("k"))
+                promotedPiece = new Knight(endPositionInt[0], endPositionInt[1], Piece.Color.Black);
+            else if (promotedLetter.equals("b"))
+                promotedPiece = new Bishop(endPositionInt[0], endPositionInt[1], Piece.Color.Black);
+            else if (promotedLetter.equals("q"))
+                promotedPiece = new Queen(endPositionInt[0], endPositionInt[1], Piece.Color.Black);
+
+            if (promotedPiece != null)
+                this.setPieceInBoard(endPositionInt[0], endPositionInt[1], promotedPiece);
+        }
     }
 
     public void movePiece(int[] startPosition, int[] endPosition) {

@@ -64,7 +64,9 @@ public class UCI {
             String lastMove = lastMoveList[lastMoveList.length - 1];
             input = lastMove;
 
-            if (((String) input).length() == 4) { // 5 for the newline
+            int inputLength = ((String) input).length();
+
+            if ((inputLength == 4) || (inputLength == 5)) { // 5 for the newline
                 // Make the ennemy move on our board
                 board.movePieceArena(input);
                 nbMoves += 1;
