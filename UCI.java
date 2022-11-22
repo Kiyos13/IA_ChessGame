@@ -53,7 +53,7 @@ public class UCI {
         player = new Player();
         player.initPlayer(Piece.Color.Black);
 
-        inputPrint(); // TODO : remove
+        // inputPrint(); // TODO : remove
     }
 
     public static void inputPosition(String input) {
@@ -62,6 +62,7 @@ public class UCI {
         if (input.contains("startpos ")) {
             input = input.substring(9);
             board.initBoard();
+            player.initPlayer(Piece.Color.Black);
         }
 
         if (input.contains("moves")) {
@@ -90,7 +91,7 @@ public class UCI {
             }
         }
 
-        inputPrint(); // TODO : remove
+        // inputPrint(); // TODO : remove
     }
 
     public static void inputGo() {
