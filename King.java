@@ -67,45 +67,6 @@ public class King extends Piece {
                 }
             }
         }
-
-        this.setNbPossibleMoves(nbOfPossibleMoves);
-        return possibleMoves;
-    }
-
-    public ArrayList<Position> getPossibleMovesClassic2(Board board, int kingRow, int kingColumn, Piece.Color kingColor) {
-        Color currentColor;
-        int nbOfPossibleMoves = 0;
-        ArrayList<Position> possibleMoves = new ArrayList<>();
-        boolean conditionRowMin, conditionRowMax, conditionCoumnMin, conditionColumnMax, currentTargetIsPossible;
-
-        // Normal moves
-        int[][] possiblePositions = {
-            {kingRow - 1, kingColumn}, {kingRow - 1, kingColumn + 1}, 
-            {kingRow, kingColumn + 1}, {kingRow + 1, kingColumn + 1}, 
-            {kingRow + 1, kingColumn}, {kingRow + 1, kingColumn - 1}, 
-            {kingRow, kingColumn - 1}, {kingRow - 1, kingColumn + 1}
-        };
-
-        for (int position = 0; position <= Piece.maxPosition; position++) {
-            currentTargetIsPossible = true;
-            conditionRowMin = (possiblePositions[position][0] > -1);
-            conditionRowMax = (possiblePositions[position][0] <= Piece.maxPosition);
-            conditionCoumnMin = (possiblePositions[position][1] > -1);
-            conditionColumnMax = (possiblePositions[position][1] <= Piece.maxPosition);
-            if (conditionRowMin && conditionRowMax && conditionCoumnMin && conditionColumnMax) {
-                System.out.println("OUI");
-                currentColor = board.getPieceInBoard(possiblePositions[position][0], possiblePositions[position][1]).getColor();
-                if (currentColor == kingColor)
-                    currentTargetIsPossible = false;
-                if (board.isKingCheckAtCoordinates2(possiblePositions[position][0], possiblePositions[position][1], kingColor))
-                    currentTargetIsPossible = false;
-                if (currentTargetIsPossible) {
-                    possibleMoves.add(new Position(possiblePositions[position][0], possiblePositions[position][1]));
-                    nbOfPossibleMoves++;
-                }
-            }
-        }
-
         this.setNbPossibleMoves(nbOfPossibleMoves);
         return possibleMoves;
     }
@@ -166,63 +127,6 @@ public class King extends Piece {
         this.setNbPossibleMoves(nbOfPossibleMoves);
         return possibleMoves;
     }*/
-
-    /*public ArrayList<Position> getPossibleMovesCastling2(Board board, int kingRow, int kingColumn, Piece.Color kingColor) {
-        Piece[] rooks = new Piece[2];
-        int nbOfPossibleMoves = 0;
-        int kingIsWhiteInt = (kingColor == Piece.Color.White) ? 1 : 0;
-        ArrayList<Position> possibleMoves = new ArrayList<>();
-
-        this.setIsControlled(this.pieceIsControlled(board)); // Set isControlled attribute for the king
-        boolean kingIsNotControlled = (!this.getIsControlled()), kingHasNotMoved = (!this.getHasAlreadyMoved());
-
-        if (kingIsNotControlled && kingHasNotMoved) {
-            rooks = new Piece[] { board.getPieceInBoard(7 * kingIsWhiteInt, 0), board.getPieceInBoard(7 * kingIsWhiteInt, Piece.maxPosition) };
-
-            // if one of the rook has not moved since the start of the game
-            for (int rooksCounter = 0; rooksCounter < 2; rooksCounter++) {
-                if (rooks[rooksCounter].getType() == Piece.Type.Rook) {
-                    if (!((Rook) rooks[rooksCounter]).getHasAlreadyMoved()) {
-                        int sideMove = (rooksCounter == 0) ? -1 : 1;
-                        Piece[] piecesBtwKingAndRook = new Piece[3];
-                        int piecesBtwKingAndRookCounter = 0;
-
-                        int rookColumn = rooks[rooksCounter].getColumn();
-                        Piece.Type supposedToBeRookType = board.getPieceInBoard(kingRow, rookColumn).getType();
-                        if (supposedToBeRookType == Piece.Type.Rook) {
-                            Piece rookToSwitchWith = board.getPieceInBoard(kingRow, rookColumn);
-                            ((Rook) rookToSwitchWith).setIsControlled(rookToSwitchWith.pieceIsControlled(board)); // Set isControlled attribute for the rook
-                            boolean rookIsNotControlled = (!((Rook) rookToSwitchWith).getIsControlled());
-                            boolean allBtwPiecesAreEmpty = true, allBtwPiecesAreNotControlled = true;
-                            
-                            for (int columnsBtw = kingColumn + sideMove; columnsBtw != rooks[rooksCounter].getColumn(); columnsBtw = columnsBtw + sideMove) {
-                                piecesBtwKingAndRook[piecesBtwKingAndRookCounter] = board.getPieceInBoard(kingRow, columnsBtw);
-                                if (piecesBtwKingAndRook[piecesBtwKingAndRookCounter].getType() != Piece.Type.None)
-                                    allBtwPiecesAreEmpty = false;
-                                else {
-                                    Piece.Type supposedToBeNoneType = piecesBtwKingAndRook[piecesBtwKingAndRookCounter].getType();
-                                    if (supposedToBeNoneType == Piece.Type.None) {
-                                        Piece emptyPieceInBtw = piecesBtwKingAndRook[piecesBtwKingAndRookCounter];
-                                        ((EmptyPiece) emptyPieceInBtw).setIsControlled(emptyPieceInBtw.pieceIsControlled(board)); // Set isControlled attribute for the empty pieces
-                                        if (((EmptyPiece) emptyPieceInBtw).getIsControlled())
-                                            allBtwPiecesAreNotControlled = false;
-                                    }
-                                }
-                                piecesBtwKingAndRookCounter++;
-                            }
-                            if (allBtwPiecesAreEmpty && allBtwPiecesAreNotControlled && rookIsNotControlled) {
-                                possibleMoves.add(new Position(rooks[rooksCounter].getRow(), rooks[rooksCounter].getColumn()));
-                                nbOfPossibleMoves++;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        this.setNbPossibleMoves(nbOfPossibleMoves);
-        return possibleMoves;
-    }*/
     
     /********** ABSTRACTs **********/
     @Override
@@ -232,14 +136,13 @@ public class King extends Piece {
         int nbOfPossibleMovesStep1 = 0, nbOfPossibleMovesStep2 = 0,  nbOfPossibleMoves = 0;
         int[][] possibleMovesClassic = new int[Piece.maxPosition * Piece.maxPosition][2];
         //int[][] possibleMovesCastling = new int[Piece.maxPosition * Piece.maxPosition][2];
-        int[][] possibleMoves = new int[Piece.maxPosition * Piece.maxPosition][2];
 
         possibleMovesClassic = getPossibleMovesClassic(board, kingRow, kingColumn, kingColor);
         nbOfPossibleMovesStep1 = this.getNbPossibleMoves();
         //possibleMovesCastling = getPossibleMovesCastling(board, kingRow, kingColumn, kingColor);
         nbOfPossibleMovesStep2 = 0;//this.getNbPossibleMoves();
-
         nbOfPossibleMoves = nbOfPossibleMovesStep1 + nbOfPossibleMovesStep2;
+        int[][] possibleMoves = new int[nbOfPossibleMoves][2];
 
         for (int i = 0; i < nbOfPossibleMoves; i++) {
             if (i < nbOfPossibleMovesStep1)
@@ -248,7 +151,6 @@ public class King extends Piece {
                 //possibleMoves[i] = possibleMovesCastling[i - nbOfPossibleMovesStep1];
             }
         }
-
         this.setNbPossibleMoves(nbOfPossibleMoves);
         return possibleMoves;
     }
@@ -261,7 +163,6 @@ public class King extends Piece {
         //ArrayList<Position> possibleMovesCastling = new ArrayList<>();
         ArrayList<Position> possibleMoves = new ArrayList<>();
 
-        possibleMovesClassic = getPossibleMovesClassic2(board, kingRow, kingColumn, kingColor);
         //possibleMovesCastling = getPossibleMovesCastling2(board, kingRow, kingColumn, kingColor);
 
         for (Position pos: possibleMovesClassic){

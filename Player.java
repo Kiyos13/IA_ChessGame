@@ -30,9 +30,25 @@ public class Player {
 
     public ArrayList<Move> generateLegalMoves(Board board){
         ArrayList<Move> movesPossiblesList = new ArrayList<>();
-
         int[][] currentPossibleMoves = new int[(Board.boardLength + 1) * (Board.boardLength + 1)][2];
         int currentNbPossibleMoves = 0;
+        if (board.isKingCheck(board.currentColor)){
+            Position pos = board.getCoordinatesForKing(board.currentColor);
+            Piece kingPiece = board.getPieceInBoard(pos.r, pos.c);
+            currentPossibleMoves = kingPiece.getPossibleMoves(board);
+            currentNbPossibleMoves = currentPossibleMoves.length;
+
+            for (int i = 0; i < currentNbPossibleMoves; i++) {
+                Move move = new Move();
+                move.start_position[0] = pos.r;
+                move.start_position[1] = pos.c;
+                move.end_position[0] = currentPossibleMoves[i][0];
+                move.end_position[1] = currentPossibleMoves[i][1];
+                System.out.printf("%s %s -> %s %s\n", pos.r, pos.c, currentPossibleMoves[i][0], currentPossibleMoves[i][1]);
+                movesPossiblesList.add(move);
+            }
+        return movesPossiblesList;
+        }
 
         for (int r = 0; r <= Board.boardLength; r++) {
             for (int c = 0; c <= Board.boardLength; c++) {
@@ -49,33 +65,6 @@ public class Player {
                         move.start_position[1] = c;
                         move.end_position[0] = currentPossibleMoves[i][0];
                         move.end_position[1] = currentPossibleMoves[i][1];
-                        //System.out.printf("%d,%d -> %d,%d\n", move.start_position[0], move.start_position[1], move.end_position[0], move.end_position[1]);
-                        movesPossiblesList.add(move);
-                    }
-                }
-            }
-        }
-        return movesPossiblesList;
-    }
-
-    public ArrayList<Move> generateLegalMoves2(Board board){
-        ArrayList<Move> movesPossiblesList = new ArrayList<>();
-        ArrayList<Position> currentPossibleMoves = new ArrayList<>();
-
-        for (int r = 0; r <= Board.boardLength; r++) {
-            for (int c = 0; c <= Board.boardLength; c++) {
-                Piece currentPiece = board.getPieceInBoard(r, c);
-                Piece.Color currentColor = currentPiece.getColor();
-                
-                if (currentColor == board.currentColor) {
-                    currentPossibleMoves = currentPiece.getPossibleMoves2(board);
-
-                    for (Position pos: currentPossibleMoves) {
-                        Move move = new Move();
-                        move.start_position[0] = r;
-                        move.start_position[1] = c;
-                        move.end_position[0] = pos.r;
-                        move.end_position[1] = pos.c;
                         movesPossiblesList.add(move);
                     }
                 }
@@ -119,7 +108,7 @@ public class Player {
         }
         else{
             int val = 1000;
-            ArrayList<Move> movesPossiblesList = generateLegalMoves2(board);
+            ArrayList<Move> movesPossiblesList = generateLegalMoves(board);
             Iterator<Move> it = movesPossiblesList.iterator();
             while(it.hasNext()){
                 Move move = it.next();
@@ -230,7 +219,7 @@ public class Player {
         copyBoard.boardCopy(board);
         System.out.println("INTIIAL BOARD COPY");
         //copyBoard.displayBoard();
-        ArrayList<Move> moves = this.generateLegalMoves2(copyBoard);
+        ArrayList<Move> moves = this.generateLegalMoves(copyBoard);
         int n = moves.size();
         System.out.println(n);
         int random = ThreadLocalRandom.current().nextInt(0, n);

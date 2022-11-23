@@ -32,10 +32,10 @@ public class Rook extends Piece {
         int[] currentPossibleMove;
         int[][] possibleMovesMax = new int[Piece.maxPosition * Piece.maxPosition][2];
         boolean conditionRowMin, conditionRowMax, conditionCoumnMin, conditionColumnMax;
-        Piece.Color currentColor = Piece.Color.None;
+        Piece.Type currentType = Piece.Type.None;
 
         // Loop for the 4 directions (up, right, down, left)
-        for (int i = 0; i < 2; i++) {
+        /*for (int i = 0; i < 2; i++) {
             for (int rookRowOrColDirectionInt = -1; rookRowOrColDirectionInt <= 1; rookRowOrColDirectionInt += 2) {
                 while ((currentRow + rookRowOrColDirectionInt >= 0) && (currentRow + rookRowOrColDirectionInt <= Piece.maxPosition)) {
                     if (i == 0)
@@ -64,11 +64,67 @@ public class Rook extends Piece {
                 currentRow = rookRow;
                 currentColumn = rookColumn;
             }
+        }*/
+
+        //Left Horizontal move
+        if (currentColumn > 0){
+            int i = currentColumn - 1;
+            currentType = board.getPieceInBoard(currentRow, i).getType();
+            while (i >= 0 && currentType == Piece.Type.None){
+                currentPossibleMove = new int[] { currentRow, i };
+                possibleMovesMax[nbOfPossibleMoves] = currentPossibleMove;
+                nbOfPossibleMoves++;
+                i--;
+                if (i >= 0)
+                    currentType = board.getPieceInBoard(currentRow, i).getType();
+            }
+        }
+
+        //Right Horizontal move
+        if (currentColumn < Piece.maxPosition){
+            int i = currentColumn + 1;
+            currentType = board.getPieceInBoard(currentRow, i).getType();
+            while (i <= Piece.maxPosition && currentType == Piece.Type.None){
+                currentPossibleMove = new int[] { currentRow, i };
+                possibleMovesMax[nbOfPossibleMoves] = currentPossibleMove;
+                nbOfPossibleMoves++;
+                i++;
+                if (i <= Piece.maxPosition)
+                    currentType = board.getPieceInBoard(currentRow, i).getType();
+            }
+        }
+
+        //Down Vertical move
+        if (currentRow < Piece.maxPosition){
+            int i = currentRow + 1;
+            currentType = board.getPieceInBoard(i, currentColumn).getType();
+            while (i <= Piece.maxPosition && currentType == Piece.Type.None){
+                currentPossibleMove = new int[] { i, currentColumn };
+                possibleMovesMax[nbOfPossibleMoves] = currentPossibleMove;
+                nbOfPossibleMoves++;
+                i++;
+                if (i <= Piece.maxPosition)
+                    currentType = board.getPieceInBoard(i, currentColumn).getType();
+            }
+        }
+
+        //Up Vertical move
+        if (currentRow > 0){
+            int i = currentRow - 1;
+            currentType = board.getPieceInBoard(i, currentColumn).getType();
+            while (i >= 0 && currentType == Piece.Type.None){
+                currentPossibleMove = new int[] { i, currentColumn };
+                possibleMovesMax[nbOfPossibleMoves] = currentPossibleMove;
+                nbOfPossibleMoves++;
+                i--;
+                if (i >= 0)
+                    currentType = board.getPieceInBoard(i, currentColumn).getType();
+            }
         }
 
         int[][] possibleMoves = new int[nbOfPossibleMoves][2];
-        for (int i = 0; i < nbOfPossibleMoves; i++) {
-            possibleMoves[i] = possibleMovesMax[i];
+        for (int j = 0; j < nbOfPossibleMoves; j++) {
+            possibleMoves[j] = possibleMovesMax[j];
         }
         return possibleMoves;
     }
@@ -125,6 +181,7 @@ public class Rook extends Piece {
     public ArrayList<Position> getPossibleMoves2(Board board) {
         ArrayList<Position> possibleMoves = getPossibleMovesRook2(board, this.getRow(), this.getColumn(), this.getColor());
         this.setNbPossibleMoves(possibleMoves.size());
+        System.out.println("ZEBI");
         return possibleMoves;
     }
 
