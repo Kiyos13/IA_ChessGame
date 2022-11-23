@@ -85,6 +85,30 @@ public class Bishop extends Piece {
     @Override
     public int[][] getPossibleMoves(Board board) {
         int[][] possibleMoves = getPossibleMovesBishop(board, this.getRow(), this.getColumn(), this.getColor());
+        int possibleMovesLength = possibleMoves.length;
+
+        /*int[][] possibleMovesTemp = new int[possibleMovesLength][2];
+        int possibleMovesTempLength = 0;
+
+        for (int i = 0; i < possibleMovesLength; i++){
+            Board trainingBoard = new Board();
+            trainingBoard.emptyBoard();
+            trainingBoard.boardCopy(board);
+            int[] start_position = new int[] { this.getRow(), this.getColumn() };
+            int[] end_position = new int[] { possibleMoves[i][0], possibleMoves[i][1] };
+            trainingBoard.movePiece(start_position, end_position);
+            if (!trainingBoard.isKingCheck(this.color)){
+                possibleMovesTemp[possibleMovesTempLength] = possibleMoves[i];
+                possibleMovesTempLength++;
+            }
+        }
+
+        int[][] possibleMovesFinal = new int[possibleMovesTempLength][2];
+        for (int i = 0; i < possibleMovesTempLength; i++){
+            possibleMovesFinal[i] = possibleMovesTemp[i];
+        }*/
+
+        //this.setNbPossibleMoves(possibleMovesFinal.length);
         this.setNbPossibleMoves(possibleMoves.length);
         return possibleMoves;
     }
