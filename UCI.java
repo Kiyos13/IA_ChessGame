@@ -96,40 +96,6 @@ public class UCI {
     }
 
     public static void inputPrint() {
-        displayBoardUCI(board);
-    }
-
-
-
-    private void setPlayerColor() {
-        if (this.firstMove == 0) {
-            if (this.ourParity == 0)
-                player.initPlayer(Piece.Color.Black);
-            else if (this.ourParity == 1)
-                player.initPlayer(Piece.Color.White);
-            this.firstMove = 1;
-        }
-        System.out.println("OUR COLOR = " + player.color);
-    }
-
-    private void ourMove() {
-        try {
-            Move move = player.movePlayer(board);
-            board.movePiece(move.start_position, move.end_position);
-
-            String arenaMoveStart = Board.lettersDict.get(move.start_position[1] + 1) + Integer.toString(move.start_position[0] + 1);
-            String arenaMoveEnd = Board.lettersDict.get(move.end_position[1] + 1) + Integer.toString(move.end_position[0] + 1);
-            String arenaMove = arenaMoveStart + arenaMoveEnd;
-
-            System.out.println("bestmove " + arenaMove);
-
-            nbMoves += 1;
-        } 
-        catch (InterruptedException e) { }
-    }
-
-    public static void displayBoardUCI(Board board) {
-        /*
         Piece[][] boardPieces = board.getBoard();
         Piece currentPiece;
         Piece.Color currentColor = Piece.Color.None;
@@ -180,6 +146,34 @@ public class UCI {
             else
                 System.out.println("\n");
         }
-        */
+    }
+
+
+
+    private void setPlayerColor() {
+        if (this.firstMove == 0) {
+            if (this.ourParity == 0)
+                player.initPlayer(Piece.Color.Black);
+            else if (this.ourParity == 1)
+                player.initPlayer(Piece.Color.White);
+            this.firstMove = 1;
+        }
+        System.out.println("OUR COLOR = " + player.color);
+    }
+
+    private void ourMove() {
+        try {
+            Move move = player.movePlayer(board);
+            board.movePiece(move.start_position, move.end_position);
+
+            String arenaMoveStart = Board.lettersDict.get(move.start_position[1] + 1) + Integer.toString(move.start_position[0] + 1);
+            String arenaMoveEnd = Board.lettersDict.get(move.end_position[1] + 1) + Integer.toString(move.end_position[0] + 1);
+            String arenaMove = arenaMoveStart + arenaMoveEnd;
+
+            System.out.println("bestmove " + arenaMove);
+
+            nbMoves += 1;
+        } 
+        catch (InterruptedException e) { }
     }
 }
