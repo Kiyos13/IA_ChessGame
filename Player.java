@@ -204,12 +204,16 @@ public class Player {
         Board copyBoard = new Board();
         copyBoard.emptyBoard();
         copyBoard.boardCopy(board);
-        MiniMaxReturn miniMaxReturnVal = this.alphaBeta(copyBoard, this.depth, true, null, -10000, 10000);
-        //MiniMaxReturn miniMaxReturnVal = this.miniMax(copyBoard, this.depth, true, null);
+        UCI.inputPrint();
+        //MiniMaxReturn miniMaxReturnVal = this.alphaBeta(copyBoard, this.depth, true, null, -10000, 10000);
+        MiniMaxReturn miniMaxReturnVal = this.miniMax(copyBoard, this.depth, true, null);
         //System.out.println("Valeur : " + miniMaxReturnVal.val);
         Move move = miniMaxReturnVal.move;
+
+
         String arenaMoveStart = Board.lettersDict.get(move.start_position[1] + 1) + Integer.toString(move.start_position[0] + 1);
         String arenaMoveEnd = Board.lettersDict.get(move.end_position[1] + 1) + Integer.toString(move.end_position[0] + 1);
+        System.out.println("OUR MOVE = " + arenaMoveStart + arenaMoveEnd);
 
         /*System.out.printf("Mouvement choisie : %s %s (%s) -> %s %s (%s) avec : %s\n", 
         move.start_position[0], move.start_position[1], arenaMoveStart,

@@ -6,7 +6,7 @@ public class UCI {
     static Board board;
     static Player player;
     static int nbMoves;
-    private int firstMove = 0;
+    private static int firstMove = 0;
     private int ourParity = 1;
 
     public void uciCommunication() {
@@ -54,15 +54,16 @@ public class UCI {
         board.initBoard();
         player = new Player();
         nbMoves = 0;
+        firstMove = 0;
         // System.out.printf("Profondeur alphabeta : %s\n", player.depth);
     }
 
     public void inputPosition(String input) {
         input = input.substring(9).concat(" ");
 
-        if (input.contains("startpos") && !input.contains("moves")) {
+        if (input.equals("startpos ")) {
             ourParity = 0;
-            setPlayerColor();            
+            setPlayerColor();
             ourMove();
         }
 
@@ -86,14 +87,78 @@ public class UCI {
         }
     }
 
+    public static void inputGo() {
+        
+    }
+
+    public static void inputQuit() {
+        System.exit(0);
+    }
+
+    public static void inputPrint() {
+        Piece[][] boardPieces = board.getBoard();
+        Piece currentPiece;
+        Piece.Color currentColor = Piece.Color.None;
+        Piece.Type currentType = Piece.Type.None;
+
+        System.out.println("  h  h  f  e  d  c  b  a\n");
+        for (int r = 0; r <= Board.boardLength; r++) {
+            for (int c = 0; c <= Board.boardLength; c++) {
+                currentPiece = boardPieces[r][c];
+                currentColor = currentPiece.getColor();
+                currentType = currentPiece.getType();
+
+                if (currentType == Piece.Type.Pawn)
+                    if (currentColor == Piece.Color.Black)
+                        System.out.printf("  p");
+                    else
+                        System.out.printf("  P");
+                else if (currentType == Piece.Type.Rook)
+                    if (currentColor == Piece.Color.Black)
+                        System.out.printf("  r");
+                    else
+                        System.out.printf("  R");
+                else if (currentType == Piece.Type.Knight)
+                    if (currentColor == Piece.Color.Black)
+                        System.out.printf("  k");
+                    else
+                        System.out.printf("  K");
+                else if (currentType == Piece.Type.Bishop)
+                    if (currentColor == Piece.Color.Black)
+                        System.out.printf("  b");
+                    else
+                        System.out.printf("  B");
+                else if (currentType == Piece.Type.Queen)
+                    if (currentColor == Piece.Color.Black)
+                        System.out.printf("  q");
+                    else
+                        System.out.printf("  Q");
+                else if (currentType == Piece.Type.King)
+                    if (currentColor == Piece.Color.Black)
+                        System.out.printf("  a");
+                    else
+                        System.out.printf("  A");
+                else
+                    System.out.printf("  .");
+            }
+            if (!(r < Board.boardLength))
+                System.out.println("\n\n  h  h  f  e  d  c  b  a");
+            else
+                System.out.println("\n");
+        }
+    }
+
+
+
     private void setPlayerColor() {
         if (this.firstMove == 0) {
             if (this.ourParity == 0)
-                player.initPlayer(Piece.Color.White);
-            else if (this.ourParity == 1)
                 player.initPlayer(Piece.Color.Black);
+            else if (this.ourParity == 1)
+                player.initPlayer(Piece.Color.White);
             this.firstMove = 1;
         }
+        System.out.println("OUR COLOR = " + player.color);
     }
 
     private void ourMove() {
@@ -110,17 +175,5 @@ public class UCI {
             nbMoves += 1;
         } 
         catch (InterruptedException e) { }
-    }
-
-    public static void inputGo() {
-        
-    }
-
-    public static void inputQuit() {
-        System.exit(0);
-    }
-
-    public static void inputPrint() {
-        board.displayBoard();
     }
 }
