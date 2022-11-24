@@ -14,12 +14,12 @@ public class Game {
     public static void main(String[] args) throws InterruptedException {
         System.out.println("================ NOUVELLE PARTIE =================");
 
-        UCI uci = new UCI();
-        uci.uciCommunication();
+        //UCI uci = new UCI();
+        //uci.uciCommunication();
         /********** ! EVERYTHING AFTER WILL NOT BE EXECUTED ! **********/
 
 
-        /*Board board = new Board();
+        Board board = new Board();
         board.emptyBoard();
         board.initBoard();
         board.displayBoard();
@@ -50,7 +50,7 @@ public class Game {
             }
 
             winnerOfTheGame = board.getWinner();
-            System.out.printf("   The %s player wins the game with %s plays\n\n", winnerOfTheGame, n);*/
+            System.out.printf("   The %s player wins the game with %s plays\n\n", winnerOfTheGame, n);
     }
 
     /******************** DISPLAYs ********************/
