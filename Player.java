@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Player {
@@ -291,6 +290,7 @@ public class Player {
         MiniMaxReturn miniMaxReturnVal = this.alphaBeta(copyBoard, this.depth, true, moveForAlgo, -10000, 10000);
         //MiniMaxReturn miniMaxReturnVal = this.miniMax(copyBoard, this.depth, true, null);
         //System.out.println("Valeur : " + miniMaxReturnVal.val);
+
         Move move = miniMaxReturnVal.move;
         if (miniMaxReturnVal.move == null){
             move = chooseRandomMove(copyBoard, false);
@@ -301,7 +301,7 @@ public class Player {
     }
 
     public Move movePlayer2(Board board){
-        System.out.println("PLAYER 2 RANDOM");
+        //System.out.println("PLAYER 2 RANDOM");
         Board copyBoard = new Board();
         copyBoard.emptyBoard();
         copyBoard.boardCopy(board);
