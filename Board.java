@@ -320,6 +320,13 @@ public class Board {
                     this.movePiece(startPositionRook, endPositionRook);
                 }
 
+                //Change the color of the current player
+                if (this.currentColor == Piece.Color.White){
+                    this.currentColor = Piece.Color.Black;
+                }
+                else{
+                    this.currentColor = Piece.Color.White;
+                }
         }
 
         if (startPositionColumnOk && startPositionLineOk && endPositionColumnOk && endPositionLineOk && !isCastling){

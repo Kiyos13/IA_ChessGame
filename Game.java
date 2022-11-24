@@ -11,11 +11,23 @@ public class Game {
 
         /*Board board = new Board();
         board.emptyBoard();
-        board.initBoard();
+        //board.initBoard();
         board.displayBoard();
 
+        board.setPieceInBoard(0, 2, new King(0,2, Piece.Color.White));
+        board.setPieceInBoard(1, 5, new Rook(1,5, Piece.Color.Black));
+        board.setPieceInBoard(0, 4, new Rook(0,4, Piece.Color.Black));
+        board.setPieceInBoard(7, 2, new King(0,2, Piece.Color.Black));
+
+        board.displayBoard();
+
+        System.out.println(board.isKingCheckMate(Piece.Color.White));
         Player player1 = new Player();
-        Player player2 = new Player();
+        player1.initPlayer(Piece.Color.White); 
+        player1.movePlayer(board);
+
+        System.out.println("End");*/
+        /*Player player2 = new Player();
 
         player1.initPlayer(Piece.Color.White);
         player2.initPlayer(Piece.Color.Black);

@@ -1,31 +1,6 @@
 
 public class Knight extends Piece {
-    
-    /********** FUNCTIONs **********/
-    public int[][][] movesPaths(int knightRow, int knightColumn) {
-        int[][][] paths = {
-            { { knightRow,     knightColumn - 1 }, { knightRow,     knightColumn - 1 }, { knightRow - 1, knightColumn - 2 } },
-            { { knightRow - 1, knightColumn     }, { knightRow - 1, knightColumn - 1 }, { knightRow - 1, knightColumn - 2 } },
-            { { knightRow,     knightColumn - 1 }, { knightRow - 1, knightColumn - 1 }, { knightRow - 2, knightColumn - 2 } },
-            { { knightRow - 1, knightColumn     }, { knightRow - 2, knightColumn     }, { knightRow - 2, knightColumn - 1 } },
-            { { knightRow - 1, knightColumn     }, { knightRow - 2, knightColumn     }, { knightRow - 2, knightColumn + 1 } },
-            { { knightRow,     knightColumn + 1 }, { knightRow - 1, knightColumn + 1 }, { knightRow - 2, knightColumn + 1 } },
-            { { knightRow - 1, knightColumn     }, { knightRow - 1, knightColumn + 1 }, { knightRow - 1, knightColumn + 2 } },
-            { { knightRow,     knightColumn + 1 }, { knightRow,     knightColumn + 2 }, { knightRow - 1, knightColumn + 2 } },
-            { { knightRow,     knightColumn + 1 }, { knightRow,     knightColumn + 2 }, { knightRow + 1, knightColumn + 2 } },
-            { { knightRow + 1, knightColumn     }, { knightRow + 1, knightColumn + 1 }, { knightRow + 1, knightColumn + 2 } },
-            { { knightRow,     knightColumn + 1 }, { knightRow + 1, knightColumn + 1 }, { knightRow + 2, knightColumn + 1 } },
-            { { knightRow + 1, knightColumn     }, { knightRow + 2, knightColumn     }, { knightRow + 2, knightColumn + 1 } },
-            { { knightRow + 1, knightColumn     }, { knightRow + 2, knightColumn     }, { knightRow + 2, knightColumn - 1 } },
-            { { knightRow,     knightColumn - 1 }, { knightRow + 1, knightColumn - 1 }, { knightRow + 2, knightColumn - 1 } },
-            { { knightRow + 1, knightColumn     }, { knightRow + 1, knightColumn - 1 }, { knightRow + 1, knightColumn - 2 } },
-            { { knightRow,     knightColumn - 1 }, { knightRow,     knightColumn - 2 }, { knightRow + 1, knightColumn - 2 } }
-
-        };
-
-        return paths;
-    }
-    
+      
     /********** ABSTRACTs **********/
     @Override
     public int[][] getPossibleMoves(Board board, boolean verifyCheck) {
@@ -34,7 +9,7 @@ public class Knight extends Piece {
         Color currentColor;
         int nbOfPossibleMoves = 0;
         int[][] possibleMovesTemp = new int[Piece.maxPosition * Piece.maxPosition][2];
-        boolean conditionRowMin, conditionRowMax, conditionCoumnMin, conditionColumnMax, currentTargetIsPossible;
+        boolean conditionRowMin, conditionRowMax, conditionCoumnMin, conditionColumnMax;
 
         // Normal moves
         int[][] possiblePositions = {
@@ -45,7 +20,6 @@ public class Knight extends Piece {
         };
 
         for (int position = 0; position <= Piece.maxPosition; position++) {
-            currentTargetIsPossible = true;
             conditionRowMin = (possiblePositions[position][0] > -1);
             conditionRowMax = (possiblePositions[position][0] <= Piece.maxPosition);
             conditionCoumnMin = (possiblePositions[position][1] > -1);

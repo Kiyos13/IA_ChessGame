@@ -45,12 +45,14 @@ public class UCI {
         //set options
     }
 
-    public static void inputIsReady() {
+    public void inputIsReady() {
+        this.firstMove = 0;
+        this.ourParity = 1;
         System.out.println("readyok");
     }
 
     public void inputUCINewGame() {
-        board = new Board();
+        board = new Board();    
         board.initBoard();
         player = new Player();
         nbMoves = 0;
@@ -65,6 +67,7 @@ public class UCI {
             ourParity = 0;
             setPlayerColor();
             ourMove();
+            System.out.println("On est noir");
         }
 
         if (input.contains("moves")) {
@@ -148,14 +151,14 @@ public class UCI {
         }
     }
 
-
-
     private void setPlayerColor() {
         if (this.firstMove == 0) {
-            if (this.ourParity == 0)
+            if (this.ourParity == 1){
                 player.initPlayer(Piece.Color.Black);
-            else if (this.ourParity == 1)
+            }
+            else if (this.ourParity == 0){
                 player.initPlayer(Piece.Color.White);
+            }
             this.firstMove = 1;
         }
         System.out.println("OUR COLOR = " + player.color);

@@ -8,6 +8,8 @@ public class Player {
     public ArrayList<Move> allMoves = new ArrayList<>();
     public ArrayList<Piece.Type> allPiecesPlayed = new ArrayList<>();
     public boolean lastTwoMovesAlreadyTheSame = false;
+    public int nbMoves = 0;
+    public int nbMovesRandomInit = 3;
 
     public void initPlayer(Piece.Color color){
         this.color = color;
@@ -149,8 +151,6 @@ public class Player {
     public MiniMaxReturn alphaBeta(Board board, int depth, boolean isMaximize, Move m, int alpha, int beta) throws InterruptedException{
         MiniMaxReturn returnVal = new MiniMaxReturn();
         returnVal.move = m;
-        if (board.currentColor != Piece.Color.White)
-            System.out.println("COULEUR : " + board.currentColor);
 
         if (this.color != board.currentColor) {
         	if (board.isKingCheckMate(board.currentColor)) {
@@ -290,18 +290,33 @@ public class Player {
             moveForAlgo = this.allMoves.get(n - x);
             lastTwoMovesAlreadyTheSame = true;
         }
+        
+        Move move;
+        //To generate random moves at the nbMovesRandomInit first moves (to have development)
+        if (this.nbMoves < this.nbMovesRandomInit){
+            move = chooseRandomMove(copyBoard, true);
+            if (this.nbMoves > 0) {
+                int n = allMoves.size();
+                while(move.start_position[0] == this.allMoves.get(n - 1).end_position[0] 
+                    && move.start_position[1] == this.allMoves.get(n - 1).end_position[1])
+                    move = chooseRandomMove(copyBoard, true);
+            }
+        }
+        else{
+            MiniMaxReturn miniMaxReturnVal = this.alphaBeta(copyBoard, this.depth, true, moveForAlgo, -10000, 10000);
+            //MiniMaxReturn miniMaxReturnVal = this.miniMax(copyBoard, this.depth, true, null);
+            //System.out.println("Valeur : " + miniMaxReturnVal.val);
 
-        MiniMaxReturn miniMaxReturnVal = this.alphaBeta(copyBoard, this.depth, true, moveForAlgo, -10000, 10000);
-        //MiniMaxReturn miniMaxReturnVal = this.miniMax(copyBoard, this.depth, true, null);
-        //System.out.println("Valeur : " + miniMaxReturnVal.val);
-
-        Move move = miniMaxReturnVal.move;
-        if (miniMaxReturnVal.move == null){
-            move = chooseRandomMove(copyBoard, false);
+            move = miniMaxReturnVal.move;
+            if (miniMaxReturnVal.move == null){
+                move = chooseRandomMove(copyBoard, false);
+            }
         }
         System.out.printf("%s %s -> %s %s\n", move.start_position[0], move.start_position[1], move.end_position[0], move.end_position[1]);
+        System.out.println("Couleur piece : " + board.getPieceInBoard(move.start_position[0], move.start_position[1]).getColor());
         this.allPiecesPlayed.add(board.getPieceInBoard(move.start_position[0], move.start_position[1]).getType());
         this.allMoves.add(move);
+        this.nbMoves++;
         return move;
     }
 
