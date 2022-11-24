@@ -5,7 +5,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Player {
 
     public Piece.Color color;
-    private int depth = 3;
+    public int depth = 3;
 
     public void initPlayer(Piece.Color color){
         this.color = color;
@@ -28,43 +28,31 @@ public class Player {
         return score;
     }
 
-    public ArrayList<Move> generateLegalMoves(Board board){
+    public ArrayList<Move> generateLegalMoves(Board board, boolean verifyCheck){
         ArrayList<Move> movesPossiblesList = new ArrayList<>();
         int[][] currentPossibleMoves = new int[(Board.boardLength + 1) * (Board.boardLength + 1)][2];
         int currentNbPossibleMoves = 0;
-        if (board.isKingCheck(board.currentColor)){
-            Position pos = board.getCoordinatesForKing(board.currentColor);
-            Piece kingPiece = board.getPieceInBoard(pos.r, pos.c);
-            currentPossibleMoves = kingPiece.getPossibleMoves(board);
-            currentNbPossibleMoves = currentPossibleMoves.length;
-
-            for (int i = 0; i < currentNbPossibleMoves; i++) {
-                Move move = new Move();
-                move.start_position[0] = pos.r;
-                move.start_position[1] = pos.c;
-                move.end_position[0] = currentPossibleMoves[i][0];
-                move.end_position[1] = currentPossibleMoves[i][1];
-                System.out.printf("%s %s -> %s %s\n", pos.r, pos.c, currentPossibleMoves[i][0], currentPossibleMoves[i][1]);
-                movesPossiblesList.add(move);
-            }
-        return movesPossiblesList;
-        }
-
         for (int r = 0; r <= Board.boardLength; r++) {
             for (int c = 0; c <= Board.boardLength; c++) {
                 Piece currentPiece = board.getPieceInBoard(r, c);
                 Piece.Color currentColor = currentPiece.getColor();
                 
                 if (currentColor == board.currentColor) {
-                    currentPossibleMoves = currentPiece.getPossibleMoves(board);
+                    //System.out.printf("\n");
+                    currentPossibleMoves = currentPiece.getPossibleMoves(board, verifyCheck);
                     currentNbPossibleMoves = currentPiece.getNbPossibleMoves();
+                    String arenaMoveStart = Board.lettersDict.get(c + 1) + Integer.toString(r + 1);
 
+                    //System.out.printf("===== PIECE : %s en %s %s (%s)\n", currentPiece.getType(), r, c, arenaMoveStart);
+                    //System.out.println("Nombre de coups : " + currentNbPossibleMoves);
                     for (int i = 0; i < currentNbPossibleMoves; i++) {
                         Move move = new Move();
                         move.start_position[0] = r;
                         move.start_position[1] = c;
                         move.end_position[0] = currentPossibleMoves[i][0];
                         move.end_position[1] = currentPossibleMoves[i][1];
+                        arenaMoveStart = Board.lettersDict.get(move.end_position[1] + 1) + Integer.toString(move.end_position[0] + 1);
+                        //System.out.printf("%s %s -> %s %s (%s)\n", move.start_position[0], move.start_position[1], move.end_position[0], move.end_position[1], arenaMoveStart);
                         movesPossiblesList.add(move);
                     }
                 }
@@ -76,21 +64,27 @@ public class Player {
     public MiniMaxReturn miniMax(Board board, int depth, boolean isMaximize, Move m) throws InterruptedException{
         MiniMaxReturn returnVal = new MiniMaxReturn();
         returnVal.move = m;
+        
+        if (this.color != board.currentColor) {
+        	if (board.isKingCheckMate(board.currentColor)) {
+        		returnVal.val = 100;
+                return returnVal;
+        	}
+            else if(board.isKingCheckMate(this.color)){
+                returnVal.val = -100;
+                return returnVal;
+            }
+        }
 
-        if (board.gameIsFinished() || depth == 0){
+        if (depth == 0){
             returnVal.val = getScore(board);
-            //System.out.println("Couleur : " + board.currentColor);
-            //System.out.println("Score :" + returnVal.val);
-            //board.displayBoard();
-            //Thread.sleep(1000);
             return returnVal;
         }
 
         if (isMaximize){
             int val = -1000;
-            ArrayList<Move> movesPossiblesList = generateLegalMoves(board);
+            ArrayList<Move> movesPossiblesList = generateLegalMoves(board, true);
             for (Move move: movesPossiblesList){
-                //System.out.printf("%d,%d -> %d,%d\n", move.start_position[0], move.start_position[1], move.end_position[0], move.end_position[1]);
                 Board previousBoard = new Board();
                 previousBoard.emptyBoard();
                 previousBoard.boardCopy(board);
@@ -108,7 +102,7 @@ public class Player {
         }
         else{
             int val = 1000;
-            ArrayList<Move> movesPossiblesList = generateLegalMoves(board);
+            ArrayList<Move> movesPossiblesList = generateLegalMoves(board, true);
             Iterator<Move> it = movesPossiblesList.iterator();
             while(it.hasNext()){
                 Move move = it.next();
@@ -134,16 +128,25 @@ public class Player {
         MiniMaxReturn returnVal = new MiniMaxReturn();
         returnVal.move = m;
 
+        if (this.color != board.currentColor) {
+        	if (board.isKingCheckMate(board.currentColor)) {
+        		returnVal.val = 100;
+                return returnVal;
+        	}
+            else if(board.isKingCheckMate(this.color)){
+                returnVal.val = -100;
+                return returnVal;
+            }
+        }
+
         if (board.gameIsFinished() || depth == 0){
-            //board.displayBoard();
-            Thread.sleep(10000);
             returnVal.val = getScore(board);
             return returnVal;
         }
 
         if (isMaximize){
             int val = -1000;
-            ArrayList<Move> movesPossiblesList = generateLegalMoves(board);
+            ArrayList<Move> movesPossiblesList = generateLegalMoves(board, true);
             for (Move move: movesPossiblesList){
                 Board previousBoard = new Board();
                 previousBoard.emptyBoard();
@@ -168,7 +171,7 @@ public class Player {
         }
         else{
             int val = 1000;
-            ArrayList<Move> movesPossiblesList = generateLegalMoves(board);
+            ArrayList<Move> movesPossiblesList = generateLegalMoves(board, true);
             Iterator<Move> it = movesPossiblesList.iterator();
             while(it.hasNext()){
                 Move move = it.next();
@@ -201,14 +204,17 @@ public class Player {
         Board copyBoard = new Board();
         copyBoard.emptyBoard();
         copyBoard.boardCopy(board);
-        //System.out.println("BOARD NOT COPY");
-        //board.displayBoard();
-        //System.out.println("INTIIAL BOARD COPY");
-        //copyBoard.displayBoard();
-        //MiniMaxReturn miniMaxReturnVal = this.alphaBeta(copyBoard, this.depth, true, null, -10000, 10000);
-        MiniMaxReturn miniMaxReturnVal = this.miniMax(copyBoard, this.depth, true, null);
+        MiniMaxReturn miniMaxReturnVal = this.alphaBeta(copyBoard, this.depth, true, null, -10000, 10000);
+        //MiniMaxReturn miniMaxReturnVal = this.miniMax(copyBoard, this.depth, true, null);
         //System.out.println("Valeur : " + miniMaxReturnVal.val);
         Move move = miniMaxReturnVal.move;
+        String arenaMoveStart = Board.lettersDict.get(move.start_position[1] + 1) + Integer.toString(move.start_position[0] + 1);
+        String arenaMoveEnd = Board.lettersDict.get(move.end_position[1] + 1) + Integer.toString(move.end_position[0] + 1);
+
+        /*System.out.printf("Mouvement choisie : %s %s (%s) -> %s %s (%s) avec : %s\n", 
+        move.start_position[0], move.start_position[1], arenaMoveStart,
+        move.end_position[0], move.end_position[1], arenaMoveEnd,
+        miniMaxReturnVal.val);*/
         return move;
     }
 
@@ -219,9 +225,9 @@ public class Player {
         copyBoard.boardCopy(board);
         System.out.println("INTIIAL BOARD COPY");
         //copyBoard.displayBoard();
-        ArrayList<Move> moves = this.generateLegalMoves(copyBoard);
+        ArrayList<Move> moves = this.generateLegalMoves(copyBoard, true);
         int n = moves.size();
-        System.out.println(n);
+        System.out.println("Nombre de coups : " + n);
         int random = ThreadLocalRandom.current().nextInt(0, n);
         Move move = moves.get(random);
         return move;

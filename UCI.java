@@ -53,6 +53,7 @@ public class UCI {
         board.initBoard();
         player = new Player();
         nbMoves = 0;
+        System.out.printf("Profondeur alphabeta : %s\n", player.depth);
     }
 
     public void inputPosition(String input) {

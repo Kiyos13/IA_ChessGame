@@ -17,7 +17,7 @@ public class EmptyPiece extends Piece {
 
     /********** ABSTRACTs **********/
     @Override
-    public int[][] getPossibleMoves(Board board) {
+    public int[][] getPossibleMoves(Board board, boolean verifyCheck) {
         int[][] possibleMoves = new int[Piece.maxPosition * Piece.maxPosition][2];
         this.setNbPossibleMoves(0);
         return possibleMoves;  

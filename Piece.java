@@ -126,7 +126,7 @@ public abstract class Piece {
 
     public boolean pieceIsControlled(Board board) {
         int targetRow = this.getRow(), targetColumn = this.getColumn();
-        ArrayList<Position> currentPossibleMoves = new ArrayList<>();
+        int[][] currentPossibleMoves = new int[(Board.boardLength + 1) * (Board.boardLength + 1)][2];
         Color enemyColor = this.getEnemyColor(), currentColor;
         Piece currentPiece;
 
@@ -135,9 +135,10 @@ public abstract class Piece {
                 currentPiece = board.getPieceInBoard(row, column);
                 currentColor = currentPiece.getColor();
                 if (currentColor == enemyColor) {
-                    currentPossibleMoves = currentPiece.getPossibleMoves2(board);
-                    for (int nbMoves = 0; nbMoves < currentPossibleMoves.size(); nbMoves++) {
-                        if ((currentPossibleMoves.get(nbMoves).r == targetRow) && (currentPossibleMoves.get(nbMoves).c == targetColumn))
+                    currentPossibleMoves = currentPiece.getPossibleMoves(board, true);
+
+                    for (int nbMoves = 0; nbMoves < currentPossibleMoves.length; nbMoves++) {
+                        if ((currentPossibleMoves[nbMoves][0] == targetRow) && (currentPossibleMoves[nbMoves][1] == targetColumn))
                             return true;
                     }
                 }
@@ -146,9 +147,34 @@ public abstract class Piece {
         return false;
     }
 
+    public int[][] getPossibleMovesWithVerifyCheck(Board board, int[][] possibleMoves){
+        int possibleMovesLength = possibleMoves.length;
+        int[][] possibleMovesTemp = new int[possibleMovesLength][2];
+        int possibleMovesTempLength = 0;
+
+        for (int i = 0; i < possibleMovesLength; i++){
+            Board trainingBoard = new Board();
+            trainingBoard.emptyBoard();
+            trainingBoard.boardCopy(board);
+            int[] start_position = new int[] { this.getRow(), this.getColumn() };
+            int[] end_position = new int[] { possibleMoves[i][0], possibleMoves[i][1] };
+            trainingBoard.movePiece(start_position, end_position);
+            if (!trainingBoard.isKingCheck(this.color)){
+                possibleMovesTemp[possibleMovesTempLength] = possibleMoves[i];
+                possibleMovesTempLength++;
+            }
+        }
+
+        int[][] possibleMovesFinal = new int[possibleMovesTempLength][2];
+        for (int i = 0; i < possibleMovesTempLength; i++){
+            possibleMovesFinal[i] = possibleMovesTemp[i];
+        }
+
+        return possibleMovesFinal;  
+    }
+
     /********** ABSTRACTs **********/
-    public abstract int[][] getPossibleMoves(Board board);
-    public abstract ArrayList<Position> getPossibleMoves2(Board board);
+    public abstract int[][] getPossibleMoves(Board board, boolean verifyCheck);
 
     /********** CONSTRUCTOR **********/
     public Piece(int row, int column, Color color, Type type) {

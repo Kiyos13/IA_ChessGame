@@ -122,13 +122,12 @@ public class Pawn extends Piece {
 
     /********** ABSTRACTs **********/
     @Override
-    public int[][] getPossibleMoves(Board board) {
+    public int[][] getPossibleMoves(Board board, boolean verifyCheck) {
         Piece.Color pawnColor = this.getColor();
         int pawnRow = this.getRow(), pawnColumn = this.getColumn();
         int nbOfPossibleMovesStep1 = 0, nbOfPossibleMovesStep2 = 0, nbOfPossibleMoves = 0, gap = -1;
         int[][] possibleMovesStraight = new int[Piece.maxPosition * Piece.maxPosition][2];
         int[][] possibleMovesSideways = new int[Piece.maxPosition * Piece.maxPosition][2];
-        int[][] possibleMoves = new int[Piece.maxPosition * Piece.maxPosition][2];
 
         if (pawnColor == Piece.Color.White)
             gap = 1;
@@ -140,6 +139,7 @@ public class Pawn extends Piece {
         nbOfPossibleMovesStep2 = this.getNbPossibleMoves();
 
         nbOfPossibleMoves = nbOfPossibleMovesStep1 + nbOfPossibleMovesStep2;
+        int[][] possibleMoves = new int[nbOfPossibleMoves][2];
 
         for (int i = 0; i < nbOfPossibleMoves; i++) {
             if (i < nbOfPossibleMovesStep1)
@@ -148,39 +148,17 @@ public class Pawn extends Piece {
                 possibleMoves[i] = possibleMovesSideways[i - nbOfPossibleMovesStep1];
         }
 
-        this.setNbPossibleMoves(nbOfPossibleMoves);
-        return possibleMoves;
-    }
-
-    @Override
-    public ArrayList<Position> getPossibleMoves2(Board board) {
-        Piece.Color pawnColor = this.getColor();
-        int pawnRow = this.getRow(), pawnColumn = this.getColumn();
-        int nbOfPossibleMovesStep1 = 0, nbOfPossibleMovesStep2 = 0, nbOfPossibleMoves = 0, gap = -1;
-        ArrayList<Position> possibleMovesStraight = new ArrayList<>();
-        ArrayList<Position> possibleMovesSideways = new ArrayList<>();
-        ArrayList<Position> possibleMoves = new ArrayList<>();
-
-        if (pawnColor == Piece.Color.White)
-            gap = 1;
-
-
-        possibleMovesStraight = getPossibleMovesStraight2(board, pawnRow, pawnColumn, gap);
-        possibleMovesSideways = getPossibleMovesSideways2(board, pawnRow, pawnColumn, gap);
-
-        nbOfPossibleMoves = nbOfPossibleMovesStep1 + nbOfPossibleMovesStep2;
-
-        for (Position pos: possibleMovesStraight){
-            possibleMoves.add(pos);
+        if (verifyCheck){
+            int[][] possibleMovesFinal = getPossibleMovesWithVerifyCheck(board, possibleMoves);
+            this.setNbPossibleMoves(possibleMovesFinal.length);
+            return possibleMovesFinal;
         }
-        for (Position pos: possibleMovesSideways){
-            possibleMoves.add(pos);
+        else{
+            this.setNbPossibleMoves(nbOfPossibleMoves);
+            return possibleMoves;
         }
-
-        this.setNbPossibleMoves(possibleMoves.size());
-        return possibleMoves;
     }
-
+    
     /********** CONSTRUCTOR **********/
     public Pawn(int row, int column, Color color) {
         super(row, column, color, Piece.Type.Pawn);

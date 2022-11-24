@@ -363,20 +363,45 @@ public class Board {
         }
     }
 
-    public boolean gameIsFinished() {
-        int blackPts = this.getBlackPoints();
-        int whitePts = this.getWhitePoints();
+    public boolean isKingCheckMate(Piece.Color color){
+        int[][] currentPossibleMoves = new int[(Board.boardLength + 1) * (Board.boardLength + 1)][2];
+        int currentNbPossibleMoves;
+        for (int r = 0; r <= Board.boardLength; r++){
+            for (int c = 0; c <= Board.boardLength; c++){
+                Piece currentPiece = getPieceInBoard(r, c);
+                if (currentPiece.getColor() == color){
+                    currentPossibleMoves = currentPiece.getPossibleMoves(this, false);
+                    currentNbPossibleMoves = currentPiece.getNbPossibleMoves();
+                    //String arenaMoveStart = Board.lettersDict.get(c + 1) + Integer.toString(r + 1);
+                    //System.out.printf("===== PIECE : %s en %s %s (%s)\n", currentPiece.getType(), r, c, arenaMoveStart);
+                    //System.out.println("Nombre de coups : " + currentNbPossibleMoves);
+                    for (int i = 0; i < currentNbPossibleMoves; i++){
+                        Board trainingBoard = new Board();
+                        trainingBoard.emptyBoard();
+                        trainingBoard.boardCopy(this);
+                        Move m = new Move();
+                        m.start_position[0] = r;
+                        m.start_position[1] = c;
+                        m.end_position[0] = currentPossibleMoves[i][0];
+                        m.end_position[1] = currentPossibleMoves[i][1];
+                        //arenaMoveStart = Board.lettersDict.get(m.end_position[1] + 1) + Integer.toString(m.end_position[0] + 1);
+                        //System.out.printf("%s %s -> %s %s (%s)\n", m.start_position[0], m.start_position[1], m.end_position[0], m.end_position[1], arenaMoveStart);
+                        trainingBoard.movePiece(m.start_position, m.end_position);
+                        if (!trainingBoard.isKingCheck(color)){
+                            return false;
+                        }
+                    }
+                }
 
-        if ((blackPts >= 100) || (whitePts >= 100))
+            }
+        }
+        return true;
+    }
+
+    public boolean gameIsFinished() {
+        if (isKingCheckMate(currentColor))
             return true;
         return false;
-
-        /* TODO :
-         * La partie peut être nulle si une position identique est sur le point de survenir ou vient de survenir au moins trois fois sur l’échiquier.
-         * La partie peut être nulle si chaque joueur a joué au moins les 50 derniers coups consécutifs sans aucun mouvement de pion ni aucune prise.
-         * La partie est nulle quand une position est telle qu’aucun joueur ne peut mater le roi adverse avec une série de coups légaux.
-         * La partie est nulle lorsque le joueur ayant le trait n’a aucun coup légal et que son roi n’est pas en échec.
-         */
     }
 
     public void invisibleKing(Position pos){
@@ -442,7 +467,7 @@ public class Board {
                         trainingBoard.movePiece(move.start_position, move.end_position);
                         Position newPos = new Position(rKing, cKing);
                         trainingBoard.invisibleKing(newPos);
-                        currentPossibleMoves = currentPiece.getPossibleMoves(trainingBoard);
+                        currentPossibleMoves = currentPiece.getPossibleMoves(trainingBoard, false);
                         currentNbPossibleMoves = currentPiece.getNbPossibleMoves();
                         for (int i = 0; i < currentNbPossibleMoves; i++){
                             if (rKing == currentPossibleMoves[i][0] && cKing == currentPossibleMoves[i][1])

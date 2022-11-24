@@ -31,52 +31,27 @@ public class Rook extends Piece {
         int currentRow = rookRow, currentColumn = rookColumn;
         int[] currentPossibleMove;
         int[][] possibleMovesMax = new int[Piece.maxPosition * Piece.maxPosition][2];
-        boolean conditionRowMin, conditionRowMax, conditionCoumnMin, conditionColumnMax;
         Piece.Type currentType = Piece.Type.None;
-
-        // Loop for the 4 directions (up, right, down, left)
-        /*for (int i = 0; i < 2; i++) {
-            for (int rookRowOrColDirectionInt = -1; rookRowOrColDirectionInt <= 1; rookRowOrColDirectionInt += 2) {
-                while ((currentRow + rookRowOrColDirectionInt >= 0) && (currentRow + rookRowOrColDirectionInt <= Piece.maxPosition)) {
-                    if (i == 0)
-                        currentRow += rookRowOrColDirectionInt;
-                    else
-                        currentColumn += rookRowOrColDirectionInt;
-                    conditionRowMin = (currentRow > -1);
-                    conditionRowMax = (currentRow <= Piece.maxPosition);
-                    conditionCoumnMin = (currentColumn > -1);
-                    conditionColumnMax = (currentColumn <= Piece.maxPosition);
-                    if (conditionRowMin && conditionRowMax && conditionCoumnMin && conditionColumnMax) {
-                        currentColor = board.getPieceInBoard(currentRow, currentColumn).getColor();
-                        if (currentColor == rookColor)
-                            break;
-                        else {
-                            currentPossibleMove = new int[] { currentRow, currentColumn };
-                            possibleMovesMax[nbOfPossibleMoves] = currentPossibleMove;
-                            nbOfPossibleMoves++;
-                            if (currentColor != Piece.Color.None)
-                                break;
-                        }
-                    }
-                    else
-                        break;             
-                }
-                currentRow = rookRow;
-                currentColumn = rookColumn;
-            }
-        }*/
+        Piece.Color currentColor = Piece.Color.None;
 
         //Left Horizontal move
         if (currentColumn > 0){
             int i = currentColumn - 1;
             currentType = board.getPieceInBoard(currentRow, i).getType();
-            while (i >= 0 && currentType == Piece.Type.None){
+            currentColor = board.getPieceInBoard(currentRow, i).getColor();
+            boolean notFirstOppositePieceFound = true;
+            while (i >= 0 && currentColor!= rookColor && notFirstOppositePieceFound){
+                if (currentType != Piece.Type.None){
+                    notFirstOppositePieceFound = false;
+                }
                 currentPossibleMove = new int[] { currentRow, i };
                 possibleMovesMax[nbOfPossibleMoves] = currentPossibleMove;
                 nbOfPossibleMoves++;
                 i--;
-                if (i >= 0)
+                if (i >= 0){
                     currentType = board.getPieceInBoard(currentRow, i).getType();
+                    currentColor = board.getPieceInBoard(currentRow, i).getColor();
+                }
             }
         }
 
@@ -84,13 +59,20 @@ public class Rook extends Piece {
         if (currentColumn < Piece.maxPosition){
             int i = currentColumn + 1;
             currentType = board.getPieceInBoard(currentRow, i).getType();
-            while (i <= Piece.maxPosition && currentType == Piece.Type.None){
+            currentColor = board.getPieceInBoard(currentRow, i).getColor();
+            boolean notFirstOppositePieceFound = true;
+            while (i <= Piece.maxPosition && currentColor!= rookColor && notFirstOppositePieceFound){
+                if (currentType != Piece.Type.None){
+                    notFirstOppositePieceFound = false;
+                }
                 currentPossibleMove = new int[] { currentRow, i };
                 possibleMovesMax[nbOfPossibleMoves] = currentPossibleMove;
                 nbOfPossibleMoves++;
                 i++;
-                if (i <= Piece.maxPosition)
+                if (i <= Piece.maxPosition){
                     currentType = board.getPieceInBoard(currentRow, i).getType();
+                    currentColor = board.getPieceInBoard(currentRow, i).getColor();
+                }
             }
         }
 
@@ -98,13 +80,20 @@ public class Rook extends Piece {
         if (currentRow < Piece.maxPosition){
             int i = currentRow + 1;
             currentType = board.getPieceInBoard(i, currentColumn).getType();
-            while (i <= Piece.maxPosition && currentType == Piece.Type.None){
+            currentColor = board.getPieceInBoard(i, currentColumn).getColor();
+            boolean notFirstOppositePieceFound = true;
+            while (i <= Piece.maxPosition && currentColor!= rookColor && notFirstOppositePieceFound){
+                if (currentType != Piece.Type.None){
+                    notFirstOppositePieceFound = false;
+                }
                 currentPossibleMove = new int[] { i, currentColumn };
                 possibleMovesMax[nbOfPossibleMoves] = currentPossibleMove;
                 nbOfPossibleMoves++;
                 i++;
-                if (i <= Piece.maxPosition)
+                if (i <= Piece.maxPosition){
                     currentType = board.getPieceInBoard(i, currentColumn).getType();
+                    currentColor = board.getPieceInBoard(i, currentColumn).getColor();
+                }
             }
         }
 
@@ -112,13 +101,20 @@ public class Rook extends Piece {
         if (currentRow > 0){
             int i = currentRow - 1;
             currentType = board.getPieceInBoard(i, currentColumn).getType();
-            while (i >= 0 && currentType == Piece.Type.None){
+            currentColor = board.getPieceInBoard(i, currentColumn).getColor();
+            boolean notFirstOppositePieceFound = true;
+            while (i >= 0 && currentColor != rookColor && notFirstOppositePieceFound){
+                if (currentType != Piece.Type.None){
+                    notFirstOppositePieceFound = false;
+                }
                 currentPossibleMove = new int[] { i, currentColumn };
                 possibleMovesMax[nbOfPossibleMoves] = currentPossibleMove;
                 nbOfPossibleMoves++;
                 i--;
-                if (i >= 0)
+                if (i >= 0){
                     currentType = board.getPieceInBoard(i, currentColumn).getType();
+                    currentColor = board.getPieceInBoard(i, currentColumn).getColor();
+                }
             }
         }
 
@@ -171,18 +167,17 @@ public class Rook extends Piece {
 
     /********** ABSTRACTs **********/
     @Override
-    public int[][] getPossibleMoves(Board board) {
+    public int[][] getPossibleMoves(Board board, boolean verifyCheck) {
         int[][] possibleMoves = getPossibleMovesRook(board, this.getRow(), this.getColumn(), this.getColor());
-        this.setNbPossibleMoves(possibleMoves.length);
-        return possibleMoves;  
-    }
-
-    @Override
-    public ArrayList<Position> getPossibleMoves2(Board board) {
-        ArrayList<Position> possibleMoves = getPossibleMovesRook2(board, this.getRow(), this.getColumn(), this.getColor());
-        this.setNbPossibleMoves(possibleMoves.size());
-        System.out.println("ZEBI");
-        return possibleMoves;
+        if (verifyCheck){
+            int[][] possibleMovesFinal = getPossibleMovesWithVerifyCheck(board, possibleMoves);
+            this.setNbPossibleMoves(possibleMovesFinal.length);
+            return possibleMovesFinal;
+        }
+        else{
+            this.setNbPossibleMoves(possibleMoves.length);
+            return possibleMoves;
+        } 
     }
 
     /********** CONSTRUCTOR **********/
