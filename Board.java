@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Hashtable;
 
 public class Board {
@@ -323,9 +322,7 @@ public class Board {
 
         }
 
-        System.out.println(isCastling);
         if (startPositionColumnOk && startPositionLineOk && endPositionColumnOk && endPositionLineOk && !isCastling){
-            System.out.println("v bn,");
             this.movePiece(startPositionInt, endPositionInt);
         }
 
@@ -397,41 +394,6 @@ public class Board {
         }
     }
 
-    public boolean isKingCheckMate(Piece.Color color){
-        int[][] currentPossibleMoves = new int[(Board.boardLength + 1) * (Board.boardLength + 1)][2];
-        int currentNbPossibleMoves;
-        for (int r = 0; r <= Board.boardLength; r++){
-            for (int c = 0; c <= Board.boardLength; c++){
-                Piece currentPiece = getPieceInBoard(r, c);
-                if (currentPiece.getColor() == color){
-                    currentPossibleMoves = currentPiece.getPossibleMoves(this, false);
-                    currentNbPossibleMoves = currentPiece.getNbPossibleMoves();
-                    //String arenaMoveStart = Board.lettersDict.get(c + 1) + Integer.toString(r + 1);
-                    //System.out.printf("===== PIECE : %s en %s %s (%s)\n", currentPiece.getType(), r, c, arenaMoveStart);
-                    //System.out.println("Nombre de coups : " + currentNbPossibleMoves);
-                    for (int i = 0; i < currentNbPossibleMoves; i++){
-                        Board trainingBoard = new Board();
-                        trainingBoard.emptyBoard();
-                        trainingBoard.boardCopy(this);
-                        Move m = new Move();
-                        m.start_position[0] = r;
-                        m.start_position[1] = c;
-                        m.end_position[0] = currentPossibleMoves[i][0];
-                        m.end_position[1] = currentPossibleMoves[i][1];
-                        //arenaMoveStart = Board.lettersDict.get(m.end_position[1] + 1) + Integer.toString(m.end_position[0] + 1);
-                        //System.out.printf("%s %s -> %s %s (%s)\n", m.start_position[0], m.start_position[1], m.end_position[0], m.end_position[1], arenaMoveStart);
-                        trainingBoard.movePiece(m.start_position, m.end_position);
-                        if (!trainingBoard.isKingCheck(color)){
-                            return false;
-                        }
-                    }
-                }
-
-            }
-        }
-        return true;
-    }
-
     public boolean gameIsFinished() {
         if (isKingCheckMate(currentColor))
             return true;
@@ -448,11 +410,6 @@ public class Board {
         kingPiece.setType(Piece.Type.King);
     }
 
-    public boolean isKingCheck(Piece.Color color){
-        Position pos = this.getCoordinatesForKing(color);
-        return isKingCheckAtCoordinates(pos.r, pos.c, color);
-    }
-
     public Position getCoordinatesForKing(Piece.Color color){
         for (int r = 0; r <= Board.boardLength; r++) {
             for (int c = 0; c <= Board.boardLength; c++) {
@@ -465,6 +422,11 @@ public class Board {
         }
         return new Position(0, 0);
      }
+
+    public boolean isKingCheck(Piece.Color color){
+        Position pos = this.getCoordinatesForKing(color);
+        return isKingCheckAtCoordinates(pos.r, pos.c, color);
+    }
 
     public boolean isKingCheckAtCoordinates(int rKing, int cKing, Piece.Color color){
         Position pos = this.getCoordinatesForKing(color);
@@ -514,6 +476,42 @@ public class Board {
         return false;
     }
 
+    //Check if the King color (Black or White) is Check Mate 
+    public boolean isKingCheckMate(Piece.Color color){
+        int[][] currentPossibleMoves = new int[(Board.boardLength + 1) * (Board.boardLength + 1)][2];
+        int currentNbPossibleMoves;
+        for (int r = 0; r <= Board.boardLength; r++){
+            for (int c = 0; c <= Board.boardLength; c++){
+                Piece currentPiece = getPieceInBoard(r, c);
+                if (currentPiece.getColor() == color){
+                    currentPossibleMoves = currentPiece.getPossibleMoves(this, false);
+                    currentNbPossibleMoves = currentPiece.getNbPossibleMoves();
+                    //String arenaMoveStart = Board.lettersDict.get(c + 1) + Integer.toString(r + 1);
+                    //System.out.printf("===== PIECE : %s en %s %s (%s)\n", currentPiece.getType(), r, c, arenaMoveStart);
+                    //System.out.println("Nombre de coups : " + currentNbPossibleMoves);
+                    for (int i = 0; i < currentNbPossibleMoves; i++){
+                        Board trainingBoard = new Board();
+                        trainingBoard.emptyBoard();
+                        trainingBoard.boardCopy(this);
+                        Move m = new Move();
+                        m.start_position[0] = r;
+                        m.start_position[1] = c;
+                        m.end_position[0] = currentPossibleMoves[i][0];
+                        m.end_position[1] = currentPossibleMoves[i][1];
+                        //arenaMoveStart = Board.lettersDict.get(m.end_position[1] + 1) + Integer.toString(m.end_position[0] + 1);
+                        //System.out.printf("%s %s -> %s %s (%s)\n", m.start_position[0], m.start_position[1], m.end_position[0], m.end_position[1], arenaMoveStart);
+                        trainingBoard.movePiece(m.start_position, m.end_position);
+                        if (!trainingBoard.isKingCheck(color)){
+                            return false;
+                        }
+                    }
+                }
+
+            }
+        }
+        return true;
+    }
+     
     public void boardCopy(Board board){
         this.currentColor = board.currentColor;
         for (int r = 0; r <= Board.boardLength; r++) {
@@ -567,7 +565,6 @@ public class Board {
         this.initPiecesValuesDict();
         this.initSizeBoard(); // Size of board
         this.currentColor = Piece.Color.White;
-        //this.initBoard();
     }
 
 }

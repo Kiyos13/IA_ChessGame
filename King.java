@@ -1,5 +1,3 @@
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 
 public class King extends Piece {
 
@@ -57,8 +55,6 @@ public class King extends Piece {
             conditionColumnMax = (possiblePositions[position][1] <= Piece.maxPosition);
             if (conditionRowMin && conditionRowMax && conditionCoumnMin && conditionColumnMax) {
                 currentColor = board.getPieceInBoard(possiblePositions[position][0], possiblePositions[position][1]).getColor();
-                int rKing = possiblePositions[position][0];
-                int cKing = possiblePositions[position][1];
                 if (currentColor == kingColor)
                     currentTargetIsPossible = false;
                 if (currentTargetIsPossible) {

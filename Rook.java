@@ -1,11 +1,9 @@
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 
 public class Rook extends Piece {
 
     /********** ATTRIBUTEs **********/
     private boolean hasAlreadyMoved;
-    private boolean isControlled; // TODO : fct to detect if a rook is controlled by another piece (for casting)
+    private boolean isControlled;
     
     /********** SETs **********/
     public void setHasAlreadyMoved(boolean hasAlreadyM) {
@@ -125,46 +123,6 @@ public class Rook extends Piece {
         return possibleMoves;
     }
     
-    public static ArrayList<Position> getPossibleMovesRook2(Board board, int rookRow, int rookColumn, Piece.Color rookColor) {
-        int currentRow = rookRow, currentColumn = rookColumn;
-        boolean conditionRowMin, conditionRowMax, conditionCoumnMin, conditionColumnMax;
-        Piece.Color currentColor = Piece.Color.None;
-
-        ArrayList<Position> possibleMoves = new ArrayList<>();
-
-        // Loop for the 4 directions (up, right, down, left)
-        for (int i = 0; i < 2; i++) {
-            for (int rookRowOrColDirectionInt = -1; rookRowOrColDirectionInt <= 1; rookRowOrColDirectionInt += 2) {
-                while ((currentRow + rookRowOrColDirectionInt >= 0) && (currentRow + rookRowOrColDirectionInt <= Piece.maxPosition)) {
-                    if (i == 0)
-                        currentRow += rookRowOrColDirectionInt;
-                    else
-                        currentColumn += rookRowOrColDirectionInt;
-                    conditionRowMin = (currentRow > -1);
-                    conditionRowMax = (currentRow <= Piece.maxPosition);
-                    conditionCoumnMin = (currentColumn > -1);
-                    conditionColumnMax = (currentColumn <= Piece.maxPosition);
-                    if (conditionRowMin && conditionRowMax && conditionCoumnMin && conditionColumnMax) {
-                        currentColor = board.getPieceInBoard(currentRow, currentColumn).getColor();
-                        if (currentColor == rookColor)
-                            break;
-                        else {
-                            Position pos = new Position(currentRow, currentColumn);
-                            possibleMoves.add(pos);
-                            if (currentColor != Piece.Color.None)
-                                break;
-                        }
-                    }
-                    else
-                        break;             
-                }
-                currentRow = rookRow;
-                currentColumn = rookColumn;
-            }
-        }
-        return possibleMoves;
-    }
-
     /********** ABSTRACTs **********/
     @Override
     public int[][] getPossibleMoves(Board board, boolean verifyCheck) {
