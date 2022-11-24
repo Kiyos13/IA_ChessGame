@@ -219,15 +219,15 @@ public class Player {
     }
 
     public Move movePlayer2(Board board){
-        System.out.println("PLAYER 2 RANDOM");
+        //System.out.println("PLAYER 2 RANDOM");
         Board copyBoard = new Board();
         copyBoard.emptyBoard();
         copyBoard.boardCopy(board);
-        System.out.println("INTIIAL BOARD COPY");
+        //System.out.println("INTIIAL BOARD COPY");
         //copyBoard.displayBoard();
         ArrayList<Move> moves = this.generateLegalMoves(copyBoard, true);
         int n = moves.size();
-        System.out.println("Nombre de coups : " + n);
+        //System.out.println("Nombre de coups : " + n);
         int random = ThreadLocalRandom.current().nextInt(0, n);
         Move move = moves.get(random);
         return move;

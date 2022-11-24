@@ -7,6 +7,7 @@ public class UCI {
     static Player player;
     static int nbMoves;
     private int firstMove = 0;
+    private int ourParity = 1;
 
     public void uciCommunication() {
         Scanner input = new Scanner(System.in);
@@ -53,29 +54,25 @@ public class UCI {
         board.initBoard();
         player = new Player();
         nbMoves = 0;
-        System.out.printf("Profondeur alphabeta : %s\n", player.depth);
+        // System.out.printf("Profondeur alphabeta : %s\n", player.depth);
     }
 
     public void inputPosition(String input) {
         input = input.substring(9).concat(" ");
 
+        if (input.contains("startpos") && !input.contains("moves")) {
+            ourParity = 0;
+            setPlayerColor();            
+            ourMove();
+        }
+
         if (input.contains("moves")) {
             String[] lastMoveList = input.split(" ");
             String lastMove = lastMoveList[lastMoveList.length - 1];
-            int n = lastMoveList.length;
-
-            if (this.firstMove == 0){
-                if (n % 2 == 0)
-                    player.initPlayer(Piece.Color.Black);
-                else{
-                    player.initPlayer(Piece.Color.White);
-                }
-                this.firstMove = 1;
-            }
-
             input = lastMove;
-
             int inputLength = ((String) input).length();
+
+            setPlayerColor();
 
             if ((inputLength == 4) || (inputLength == 5)) { // 5 for the newline
                 // Make the ennemy move on our board
@@ -83,27 +80,36 @@ public class UCI {
                 nbMoves += 1;
 
                 // Make our move on the board and give it to the Arena plateform
-                if (nbMoves % 2 == 1) {
-                    try 
-                    {
-                        Move move = player.movePlayer(board);
-                        board.movePiece(move.start_position, move.end_position);
-
-                        String arenaMoveStart = Board.lettersDict.get(move.start_position[1] + 1) + Integer.toString(move.start_position[0] + 1);
-                        String arenaMoveEnd = Board.lettersDict.get(move.end_position[1] + 1) + Integer.toString(move.end_position[0] + 1);
-                        String arenaMove = arenaMoveStart + arenaMoveEnd;
-
-                        System.out.println("bestmove " + arenaMove);
-
-                        nbMoves += 1;
-                    } 
-                    catch (InterruptedException e)
-                    {
-                        
-                    }
-                }
+                if (nbMoves % 2 == this.ourParity)
+                    ourMove();
             }
         }
+    }
+
+    private void setPlayerColor() {
+        if (this.firstMove == 0) {
+            if (this.ourParity == 0)
+                player.initPlayer(Piece.Color.White);
+            else if (this.ourParity == 1)
+                player.initPlayer(Piece.Color.Black);
+            this.firstMove = 1;
+        }
+    }
+
+    private void ourMove() {
+        try {
+            Move move = player.movePlayer(board);
+            board.movePiece(move.start_position, move.end_position);
+
+            String arenaMoveStart = Board.lettersDict.get(move.start_position[1] + 1) + Integer.toString(move.start_position[0] + 1);
+            String arenaMoveEnd = Board.lettersDict.get(move.end_position[1] + 1) + Integer.toString(move.end_position[0] + 1);
+            String arenaMove = arenaMoveStart + arenaMoveEnd;
+
+            System.out.println("bestmove " + arenaMove);
+
+            nbMoves += 1;
+        } 
+        catch (InterruptedException e) { }
     }
 
     public static void inputGo() {
