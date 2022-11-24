@@ -66,7 +66,7 @@ public class Board {
     /********** FUNCTIONs **********/
     /***** Inits *****/
     public void initSizeBoard() {
-        this.board = new Piece[this.boardLength + 1][this.boardLength + 1];
+        this.board = new Piece[Board.boardLength + 1][Board.boardLength + 1];
     }
 
     private void initPawns() {
@@ -287,13 +287,47 @@ public class Board {
         startPositionInt[0] = Integer.parseInt(startPosition.substring(1, 2)) - 1;
         endPositionInt[0] = Integer.parseInt(endPosition.substring(1, 2)) - 1;
 
+        System.out.printf("On a : %s -> %s\n", startPosition, endPosition);
+        System.out.printf("On a : %s %s -> %s %s\n", startPositionInt[0], startPositionInt[1], endPositionInt[0], endPositionInt[1]);
+
         boolean startPositionLineOk = (startPositionInt[0] >= 0) && (startPositionInt[0] <= 7);
         boolean startPositionColumnOk = (startPositionInt[1] >= 0) && (startPositionInt[1] <= 7);
         boolean endPositionLineOk = (endPositionInt[0] >= 0) && (endPositionInt[0] <= 7);
         boolean endPositionColumnOk = (endPositionInt[1] >= 0) && (endPositionInt[1] <= 7);
+        boolean isCastling = false;
 
-        if (startPositionColumnOk && startPositionLineOk && endPositionColumnOk && endPositionLineOk)
+        //Check if it is castling
+        if (getPieceInBoard(startPositionInt[0], startPositionInt[1]).getType() == Piece.Type.King
+            && (startPositionInt[1] - endPositionInt[1] - 2 == 0 
+            || startPositionInt[1] - endPositionInt[1] + 2 == 0)){
+                isCastling = true;
+                int row = 0;
+                if (getPieceInBoard(startPositionInt[0], startPositionInt[1]).getColor() == Piece.Color.Black)
+                    row = 7;
+
+                //Small castling
+                if (endPositionInt[1] == 1){
+                    this.movePiece(startPositionInt, endPositionInt);
+                    int[] startPositionRook = { row, 0 };
+                    int[] endPositionRook = { row, 2 };
+                    this.movePiece(startPositionRook, endPositionRook);
+                }
+                
+                //Big castling
+                else if (endPositionInt[1] == 5){
+                    this.movePiece(startPositionInt, endPositionInt);
+                    int[] startPositionRook = { row, 7 };
+                    int[] endPositionRook = { row, 4 };
+                    this.movePiece(startPositionRook, endPositionRook);
+                }
+
+        }
+
+        System.out.println(isCastling);
+        if (startPositionColumnOk && startPositionLineOk && endPositionColumnOk && endPositionLineOk && !isCastling){
+            System.out.println("v bn,");
             this.movePiece(startPositionInt, endPositionInt);
+        }
 
         if (move.length() == 5) {
             Piece promotedPiece = null;

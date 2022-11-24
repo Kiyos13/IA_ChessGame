@@ -149,6 +149,8 @@ public class Player {
     public MiniMaxReturn alphaBeta(Board board, int depth, boolean isMaximize, Move m, int alpha, int beta) throws InterruptedException{
         MiniMaxReturn returnVal = new MiniMaxReturn();
         returnVal.move = m;
+        if (board.currentColor != Piece.Color.White)
+            System.out.println("COULEUR : " + board.currentColor);
 
         if (this.color != board.currentColor) {
         	if (board.isKingCheckMate(board.currentColor)) {
@@ -273,6 +275,8 @@ public class Player {
 
     public Move movePlayer(Board board) throws InterruptedException{
         System.out.println("PLAYER 1 MINIMAX");
+        System.out.println("JE SUIS " + this.color);
+        System.out.println("Plateau de couleur " + board.currentColor);
         Board copyBoard = new Board();
         copyBoard.emptyBoard();
         copyBoard.boardCopy(board);
@@ -295,6 +299,7 @@ public class Player {
         if (miniMaxReturnVal.move == null){
             move = chooseRandomMove(copyBoard, false);
         }
+        System.out.printf("%s %s -> %s %s\n", move.start_position[0], move.start_position[1], move.end_position[0], move.end_position[1]);
         this.allPiecesPlayed.add(board.getPieceInBoard(move.start_position[0], move.start_position[1]).getType());
         this.allMoves.add(move);
         return move;
