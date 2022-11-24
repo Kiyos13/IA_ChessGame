@@ -30,46 +30,35 @@ public class Knight extends Piece {
     @Override
     public int[][] getPossibleMoves(Board board, boolean verifyCheck) {
         int knightRow = this.getRow(), knightColumn = this.getColumn();
-        int currentRow, currentColumn, currentTargetIsPossible, nbOfPossibleMoves = 0;
-        int[][] possibleMovesTemp = new int[Piece.maxPosition * Piece.maxPosition][2], currentPath;
-        int[][][] paths = movesPaths(knightRow, knightColumn);
-        boolean moveAlreadyInArray, firstPathForOnePosition, conditionPathHasEnemyPieces, conditionLastIsKnightColor;
-        boolean conditionRowMin, conditionRowMax, conditionCoumnMin, conditionColumnMax;
-        Piece.Color knightColor = this.getColor(), enemyColor = this.getEnemyColor(), currentColor;
+        Piece.Color knightColor = this.color;
+        Color currentColor;
+        int nbOfPossibleMoves = 0;
+        int[][] possibleMovesTemp = new int[Piece.maxPosition * Piece.maxPosition][2];
+        boolean conditionRowMin, conditionRowMax, conditionCoumnMin, conditionColumnMax, currentTargetIsPossible;
 
-        for (int possiblePos = 0; possiblePos < 16; possiblePos++) {
-            firstPathForOnePosition = (possiblePos % 2 == 0);
-            moveAlreadyInArray = false;
-            currentPath = paths[possiblePos];
-            currentTargetIsPossible = 1;
-            for (int pathBox = 0; pathBox < 3; pathBox++) {
-                currentRow = currentPath[pathBox][0];
-                currentColumn = currentPath[pathBox][1];
-                conditionRowMin = (currentRow > -1);
-                conditionRowMax = (currentRow <= Piece.maxPosition);
-                conditionCoumnMin = (currentColumn > -1);
-                conditionColumnMax = (currentColumn <= Piece.maxPosition);
+        // Normal moves
+        int[][] possiblePositions = {
+            {knightRow - 2, knightColumn - 1}, {knightRow - 2, knightColumn + 1},
+            {knightRow - 1, knightColumn + 2}, {knightRow + 1, knightColumn + 2},
+            {knightRow + 2, knightColumn + 1}, {knightRow + 2, knightColumn - 1},
+            {knightRow + 1 , knightColumn - 2}, {knightRow - 1, knightColumn - 2}
+        };
 
-                if (conditionRowMin && conditionRowMax && conditionCoumnMin && conditionColumnMax) {
-                    currentColor = board.getPieceInBoard(currentRow, currentColumn).getColor();
-                    conditionPathHasEnemyPieces = ((pathBox != 2) && (currentColor == enemyColor));
-                    conditionLastIsKnightColor = ((pathBox == 2) && (currentColor == knightColor));
-
-                    if (conditionPathHasEnemyPieces || conditionLastIsKnightColor)
-                        currentTargetIsPossible = 0;
-
-                    if ((pathBox == 2) && (currentTargetIsPossible == 1)) {
-                        if (firstPathForOnePosition)
-                            moveAlreadyInArray = true;
-
-                        if (!moveAlreadyInArray) {
-                            possibleMovesTemp[nbOfPossibleMoves] = new int[] { currentRow, currentColumn };
-                            nbOfPossibleMoves++;
-                        }
-                    }
+        for (int position = 0; position <= Piece.maxPosition; position++) {
+            currentTargetIsPossible = true;
+            conditionRowMin = (possiblePositions[position][0] > -1);
+            conditionRowMax = (possiblePositions[position][0] <= Piece.maxPosition);
+            conditionCoumnMin = (possiblePositions[position][1] > -1);
+            conditionColumnMax = (possiblePositions[position][1] <= Piece.maxPosition);
+            if (conditionRowMin && conditionRowMax && conditionCoumnMin && conditionColumnMax) {
+                currentColor = board.getPieceInBoard(possiblePositions[position][0], possiblePositions[position][1]).getColor();
+                if (currentColor != knightColor) {
+                    possibleMovesTemp[nbOfPossibleMoves] = new int[] { possiblePositions[position][0], possiblePositions[position][1] };
+                    nbOfPossibleMoves++;
                 }
             }
         }
+
         int[][] possibleMoves = new int[nbOfPossibleMoves][2];
 
         for (int i = 0; i < nbOfPossibleMoves; i++)
