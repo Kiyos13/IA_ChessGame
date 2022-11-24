@@ -4,15 +4,21 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Player {
 
     public Piece.Color color;
-    public int depth = 3;
-    public ArrayList<Move> allMoves = new ArrayList<>();
-    public ArrayList<Piece.Type> allPiecesPlayed = new ArrayList<>();
+    public int depth;
+    public ArrayList<Move> allMoves;
+    public ArrayList<Piece.Type> allPiecesPlayed;
     public boolean lastTwoMovesAlreadyTheSame = false;
-    public int nbMoves = 0;
-    public int nbMovesRandomInit = 3;
+    public int nbMoves;
+    public int nbMovesRandomInit;
 
     public void initPlayer(Piece.Color color){
         this.color = color;
+        this.depth = 3;
+        this.allMoves = new ArrayList<>();
+        this.allPiecesPlayed = new ArrayList<>();
+        this.lastTwoMovesAlreadyTheSame = false;
+        this.nbMoves = 0;
+        this.nbMovesRandomInit = 3;
     }
 
     public int getScore(Board board){
@@ -42,7 +48,6 @@ public class Player {
                 Piece.Color currentColor = currentPiece.getColor();
                 
                 if (currentColor == board.currentColor) {
-                    //System.out.printf("\n");
                     currentPossibleMoves = currentPiece.getPossibleMoves(board, verifyCheck);
                     currentNbPossibleMoves = currentPiece.getNbPossibleMoves();
                     String arenaMoveStart = Board.lettersDict.get(c + 1) + Integer.toString(r + 1);
@@ -172,7 +177,6 @@ public class Player {
             int val = -1000;
             ArrayList<Move> movesPossiblesList = generateLegalMoves(board, true);
             for (Move move: movesPossiblesList){
-                //System.out.printf("%s %s -> %s %s\n", move.start_position[0], move.start_position[1], move.end_position[0], move.end_position[1]);
                 boolean moveToAvoid = false;
                 if (m != null){
                     if (m.start_position[0] == move.start_position[0]
@@ -183,7 +187,6 @@ public class Player {
                         }
                 }
                 if (!moveToAvoid){
-                    //System.out.printf("MOVE NOT AVOID %s %s -> %s %s\n", move.start_position[0], move.start_position[1], move.end_position[0], move.end_position[1]);
                     Board previousBoard = new Board();
                     previousBoard.emptyBoard();
                     previousBoard.boardCopy(board);
@@ -273,6 +276,18 @@ public class Player {
         return false;
     }
 
+    int nbPiecesOnBoard(Board board){
+        int n = 0;
+        for (int r = 0; r <= Board.boardLength; r++){
+            for (int c = 0; c <= Board.boardLength; c++){
+                if (board.getPieceInBoard(r, c).getType() != Piece.Type.None){
+                    n++;
+                }
+            }
+        }
+        return n;
+    }
+
     public Move movePlayer(Board board) throws InterruptedException{
         System.out.println("PLAYER 1 MINIMAX");
         System.out.println("JE SUIS " + this.color);
@@ -303,8 +318,11 @@ public class Player {
             }
         }
         else{
-            MiniMaxReturn miniMaxReturnVal = this.alphaBeta(copyBoard, this.depth, true, moveForAlgo, -10000, 10000);
-            //MiniMaxReturn miniMaxReturnVal = this.miniMax(copyBoard, this.depth, true, null);
+            if (this.nbPiecesOnBoard(copyBoard) < 5){
+                this.depth = 5;
+            }
+            //MiniMaxReturn miniMaxReturnVal = this.alphaBeta(copyBoard, this.depth, true, moveForAlgo, -10000, 10000);
+            MiniMaxReturn miniMaxReturnVal = this.miniMax(copyBoard, this.depth, true, null);
             //System.out.println("Valeur : " + miniMaxReturnVal.val);
 
             move = miniMaxReturnVal.move;
@@ -312,8 +330,7 @@ public class Player {
                 move = chooseRandomMove(copyBoard, false);
             }
         }
-        System.out.printf("%s %s -> %s %s\n", move.start_position[0], move.start_position[1], move.end_position[0], move.end_position[1]);
-        System.out.println("Couleur piece : " + board.getPieceInBoard(move.start_position[0], move.start_position[1]).getColor());
+        //System.out.printf("%s %s -> %s %s\n", move.start_position[0], move.start_position[1], move.end_position[0], move.end_position[1]);
         this.allPiecesPlayed.add(board.getPieceInBoard(move.start_position[0], move.start_position[1]).getType());
         this.allMoves.add(move);
         this.nbMoves++;
