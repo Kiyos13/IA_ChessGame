@@ -6,7 +6,7 @@ public class King extends Piece {
     /********** ATTRIBUTEs **********/
     private boolean hasBeenCheck;
     private boolean hasAlreadyMoved;
-    private boolean isControlled; // TODO : fct to detect if a king is controlled by another piece (for casting)
+    private boolean isControlled;
 
     /********** SETs **********/
     public void setHasBeenCheck(boolean hasBeenC) {
@@ -59,7 +59,7 @@ public class King extends Piece {
                 currentColor = board.getPieceInBoard(possiblePositions[position][0], possiblePositions[position][1]).getColor();
                 int rKing = possiblePositions[position][0];
                 int cKing = possiblePositions[position][1];
-                if (currentColor == kingColor || board.isKingCheckAtCoordinates(rKing, cKing, kingColor))
+                if (currentColor == kingColor)
                     currentTargetIsPossible = false;
                 if (currentTargetIsPossible) {
                     possibleMoves[nbOfPossibleMoves] = new int[] { possiblePositions[position][0], possiblePositions[position][1] };
@@ -76,26 +76,27 @@ public class King extends Piece {
     public int[][] getPossibleMoves(Board board, boolean verifyCheck) {
         Color kingColor = this.getColor();
         int kingRow = this.getRow(), kingColumn = this.getColumn();
-        int nbOfPossibleMovesStep1 = 0, nbOfPossibleMovesStep2 = 0,  nbOfPossibleMoves = 0;
+        int nbOfPossibleMoves = 0;
         int[][] possibleMovesClassic = new int[Piece.maxPosition * Piece.maxPosition][2];
-        //int[][] possibleMovesCastling = new int[Piece.maxPosition * Piece.maxPosition][2];
 
         possibleMovesClassic = getPossibleMovesClassic(board, kingRow, kingColumn, kingColor);
-        nbOfPossibleMovesStep1 = this.getNbPossibleMoves();
-        //possibleMovesCastling = getPossibleMovesCastling(board, kingRow, kingColumn, kingColor);
-        nbOfPossibleMovesStep2 = 0;//this.getNbPossibleMoves();
-        nbOfPossibleMoves = nbOfPossibleMovesStep1 + nbOfPossibleMovesStep2;
+        nbOfPossibleMoves = this.getNbPossibleMoves();
+
         int[][] possibleMoves = new int[nbOfPossibleMoves][2];
 
         for (int i = 0; i < nbOfPossibleMoves; i++) {
-            if (i < nbOfPossibleMovesStep1)
                 possibleMoves[i] = possibleMovesClassic[i];
-            else{
-                //possibleMoves[i] = possibleMovesCastling[i - nbOfPossibleMovesStep1];
-            }
         }
-        this.setNbPossibleMoves(nbOfPossibleMoves);
-        return possibleMoves;
+
+        if (verifyCheck){
+            int[][] possibleMovesFinal = getPossibleMovesWithVerifyCheck(board, possibleMoves);
+            this.setNbPossibleMoves(possibleMovesFinal.length);
+            return possibleMovesFinal;
+        }
+        else{
+            this.setNbPossibleMoves(nbOfPossibleMoves);
+            return possibleMoves;
+        }
     }
 
     /********** CONSTRUCTOR **********/

@@ -23,7 +23,7 @@ public class Game {
         board.emptyBoard();
         board.initBoard();
         board.displayBoard();
- 
+
         Player player1 = new Player();
         Player player2 = new Player();
 
