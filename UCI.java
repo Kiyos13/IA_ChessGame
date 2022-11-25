@@ -67,7 +67,6 @@ public class UCI {
             ourParity = 0;
             setPlayerColor();
             ourMove();
-            System.out.println("On est noir");
         }
 
         if (input.contains("moves")) {
