@@ -29,7 +29,7 @@ La stratégie suivante a été implémentée :
 
 ## Autres fonctionnalités pratiques mises en place
 
-Autres fonctionnalités mise en place :
+Autres fonctionnalités mises en place :
 * `isKingCheck(color)` : méthode de la **classe Board** permettant de savoir si le roi de couleur **color** est en échec
 * `isKingCheckMate(color)` : méthode de la **classe Board** permettant de savoir si le roi de couleur **color** est en échec et mat
 * `generateLegalMoves(board, verifyCheck)` : méthode de la **classe abstraite Piece** (donc implémentée pour chaque pièce héritant de cette classe) qui renvoie l'ensemble des coups possibles pour une pièce. Le **booléen verifyCheck** permet de savoir si les coups renvoyés doivent tenir compte de la mise en échec de son propre roi si le coup est réalisé (utile lorsque nous n'avons plus de coup possible ne menant pas à un échec inévitable)
