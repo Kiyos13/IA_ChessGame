@@ -289,9 +289,6 @@ public class Player {
     }
 
     public Move movePlayer(Board board) throws InterruptedException{
-        System.out.println("PLAYER 1 MINIMAX");
-        System.out.println("JE SUIS " + this.color);
-        System.out.println("Plateau de couleur " + board.currentColor);
         Board copyBoard = new Board();
         copyBoard.emptyBoard();
         copyBoard.boardCopy(board);
