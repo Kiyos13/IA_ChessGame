@@ -50,7 +50,7 @@ public class Player {
                 if (currentColor == board.currentColor) {
                     currentPossibleMoves = currentPiece.getPossibleMoves(board, verifyCheck);
                     currentNbPossibleMoves = currentPiece.getNbPossibleMoves();
-                    String arenaMoveStart = Board.lettersDict.get(c + 1) + Integer.toString(r + 1);
+                    //String arenaMoveStart = Board.lettersDict.get(c + 1) + Integer.toString(r + 1);
 
                     //System.out.printf("===== PIECE : %s en %s %s (%s)\n", currentPiece.getType(), r, c, arenaMoveStart);
                     //System.out.println("Nombre de coups : " + currentNbPossibleMoves);
@@ -60,7 +60,7 @@ public class Player {
                         move.start_position[1] = c;
                         move.end_position[0] = currentPossibleMoves[i][0];
                         move.end_position[1] = currentPossibleMoves[i][1];
-                        arenaMoveStart = Board.lettersDict.get(move.end_position[1] + 1) + Integer.toString(move.end_position[0] + 1);
+                        //arenaMoveStart = Board.lettersDict.get(move.end_position[1] + 1) + Integer.toString(move.end_position[0] + 1);
                         //System.out.printf("%s %s -> %s %s (%s)\n", move.start_position[0], move.start_position[1], move.end_position[0], move.end_position[1], arenaMoveStart);
                         movesPossiblesList.add(move);
                     }
@@ -70,7 +70,7 @@ public class Player {
         return movesPossiblesList;
     }
 
-    public MiniMaxReturn miniMax(Board board, int depth, boolean isMaximize, Move m) throws InterruptedException{
+    public MiniMaxReturn miniMax(Board board, int depth, boolean isMaximize, Move m){
         MiniMaxReturn returnVal = new MiniMaxReturn();
         returnVal.move = m;
         
@@ -115,7 +115,7 @@ public class Player {
                     }
                     returnVal.val = Math.max(val, eval);
                     val = returnVal.val;
-                    board.emptyBoard();;
+                    board.emptyBoard();
                     board.boardCopy(previousBoard);
                 }
             }
@@ -145,7 +145,7 @@ public class Player {
                     }
                     returnVal.val = Math.min(val, eval);
                     val = returnVal.val;
-                    board.emptyBoard();;
+                    board.emptyBoard();
                     board.boardCopy(previousBoard);
                 }   
             }         
@@ -153,7 +153,7 @@ public class Player {
         return returnVal;
     }
 
-    public MiniMaxReturn alphaBeta(Board board, int depth, boolean isMaximize, Move m, int alpha, int beta) throws InterruptedException{
+    public MiniMaxReturn alphaBeta(Board board, int depth, boolean isMaximize, Move m, int alpha, int beta){
         MiniMaxReturn returnVal = new MiniMaxReturn();
         returnVal.move = m;
 
@@ -168,7 +168,7 @@ public class Player {
             }
         }
 
-        if (board.gameIsFinished() || depth == 0){
+        if (depth == 0){
             returnVal.val = getScore(board);
             return returnVal;
         }
@@ -204,7 +204,7 @@ public class Player {
                         return returnVal;
                     }
                     alpha = Math.max(alpha, val);
-                    board.emptyBoard();;
+                    board.emptyBoard();
                     board.boardCopy(previousBoard);
                 }
         }
@@ -229,7 +229,7 @@ public class Player {
                     board.movePiece(move.start_position, move.end_position);
                     MiniMaxReturn miniMaxReturnVal = this.alphaBeta(board, depth - 1, true, null, alpha, beta);
                     int eval = miniMaxReturnVal.val;
-                    if (val >= eval){
+                    if (val > eval){
                         returnVal.move = move;
                     }
                     returnVal.val = Math.min(val, eval);
@@ -240,7 +240,7 @@ public class Player {
                         return returnVal;
                     }
                     beta = Math.min(beta, val);
-                    board.emptyBoard();;
+                    board.emptyBoard();
                     board.boardCopy(previousBoard);
                 }   
             }         
@@ -318,8 +318,8 @@ public class Player {
             if (this.nbPiecesOnBoard(copyBoard) < 5){
                 this.depth = 5;
             }
-            //MiniMaxReturn miniMaxReturnVal = this.alphaBeta(copyBoard, this.depth, true, moveForAlgo, -10000, 10000);
-            MiniMaxReturn miniMaxReturnVal = this.miniMax(copyBoard, this.depth, true, null);
+            MiniMaxReturn miniMaxReturnVal = this.alphaBeta(copyBoard, this.depth, true, moveForAlgo, -10000, 10000);
+            //MiniMaxReturn miniMaxReturnVal = this.miniMax(copyBoard, this.depth, true, null);
             //System.out.println("Valeur : " + miniMaxReturnVal.val);
 
             move = miniMaxReturnVal.move;
