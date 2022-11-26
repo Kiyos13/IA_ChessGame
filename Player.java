@@ -11,14 +11,27 @@ public class Player {
     public int nbMoves;
     public int nbMovesRandomInit;
 
+    /********** CONSTRUCTOR **********/
+    public Player(){
+        this.depth = 3;
+        this.nbMovesRandomInit = 3;
+    }
+    
+    public Player(int depth){
+        this.depth = depth;
+    }
+
+    public Player(int depth, int nbMovesRandomInit){
+        this.depth = depth;
+        this.nbMovesRandomInit = nbMovesRandomInit;
+    }
+
     public void initPlayer(Piece.Color color){
         this.color = color;
-        this.depth = 3;
         this.allMoves = new ArrayList<>();
         this.allPiecesPlayed = new ArrayList<>();
         this.lastTwoMovesAlreadyTheSame = false;
         this.nbMoves = 0;
-        this.nbMovesRandomInit = 3;
     }
 
     public int getScore(Board board){
@@ -159,11 +172,11 @@ public class Player {
 
         if (this.color != board.currentColor) {
         	if (board.isKingCheckMate(board.currentColor)) {
-        		returnVal.val = 100;
+        		returnVal.val = 100 + depth;
                 return returnVal;
         	}
             else if(board.isKingCheckMate(this.color)){
-                returnVal.val = -100;
+                returnVal.val = -100 - depth;
                 return returnVal;
             }
         }
@@ -304,6 +317,7 @@ public class Player {
         }
         
         Move move;
+        //int val = 0;
         //To generate random moves at the nbMovesRandomInit first moves (to have development)
         if (this.nbMoves < this.nbMovesRandomInit){
             move = chooseRandomMove(copyBoard, true);
@@ -323,11 +337,16 @@ public class Player {
             //System.out.println("Valeur : " + miniMaxReturnVal.val);
 
             move = miniMaxReturnVal.move;
+            //val = miniMaxReturnVal.val;
             if (miniMaxReturnVal.move == null){
                 move = chooseRandomMove(copyBoard, false);
             }
         }
-        //System.out.printf("%s %s -> %s %s\n", move.start_position[0], move.start_position[1], move.end_position[0], move.end_position[1]);
+        //String arenaMoveStart = Board.lettersDict.get(move.start_position[1] + 1) + Integer.toString(move.start_position[0] + 1);
+        //String arenaMoveEnd = Board.lettersDict.get(move.end_position[1] + 1) + Integer.toString(move.end_position[0] + 1);
+
+        //System.out.printf("Coup alpha-beta : %s -> %s\n", arenaMoveStart, arenaMoveEnd);
+        //System.out.println("Valeur du coup : " + val);
         this.allPiecesPlayed.add(board.getPieceInBoard(move.start_position[0], move.start_position[1]).getType());
         this.allMoves.add(move);
         this.nbMoves++;
