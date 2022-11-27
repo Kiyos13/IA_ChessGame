@@ -2,7 +2,7 @@
 public class Game {
      
     public static void main(String[] args) throws InterruptedException {
-        System.out.println("================ NOUVELLE PARTIE =================");
+        System.out.println("================ NOUVELLE PARTIE ================");
 
         UCI uci = new UCI();
         uci.uciCommunication();
